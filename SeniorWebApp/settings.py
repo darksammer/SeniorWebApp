@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'valuation.apps.ValuationConfig'
 ]
 
 MIDDLEWARE = [
@@ -77,8 +78,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'senior_project',
-        'USER': 'root',
-        'PASSWORD': '1234',
+        'USER': 'project01',
+        'PASSWORD': 'project01',
         'HOST': '127.0.0.1',
         'PORT': '3306',
     }
