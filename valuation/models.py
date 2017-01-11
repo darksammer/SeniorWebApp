@@ -4,10 +4,21 @@ from django.db import models
 class General_Information(models.Model):
     short_name = models.CharField(primary_key=True , max_length = 10)
     full_name = models.CharField(max_length = 100)
-    fund_type = models.CharField(max_length = 20)
+
+    #fixed dropdown for fund_type
+    LEASE_FREE = 'LF'
+    LEASE = 'L'
+    FREE = 'F'
+    Fund_Type_Choices = (
+        (LEASE_FREE, 'Leasehold & Freehold'),
+        (LEASE, 'Leasehold'),
+        (FREE, 'Freehold'),
+    )
+    fund_type = models.CharField(max_length = 20,choices = Fund_Type_Choices,default=LEASE)
+
     property_type = models.CharField(max_length = 50)
     ipo_date = models.IntegerField()
-    dividend_payout_per_year = models.SmallIntegerField()
+    dividend_payout_amount_per_year = models.SmallIntegerField()
 
 class Dividend_Yield(models.Model):
     short_name = models.ForeignKey(General_Information, on_delete=models.CASCADE)
