@@ -9,22 +9,22 @@ class GeneralAdmin(admin.ModelAdmin):
 #Admin class for Dividend_Yield
 class YieldAdmin(admin.ModelAdmin):
     search_fields = ['short_name']
-    list_display = ('short_name', 'quarter', 'div_yield')
+    list_display = ('short_name', 'quarter', 'year', 'div_yield')
 
 #Admin class for Dividend_Payout
 class PayoutAdmin(admin.ModelAdmin):
     search_fields = ['short_name']
-    list_display = ('short_name', 'quarter', 'div_per_share')
+    list_display = ('short_name', 'quarter', 'year', 'div_per_share')
 
 #Admin class for Financial_Statement
 class StatementAdmin(admin.ModelAdmin):
     search_fields = ['short_name']
-    list_display = ('short_name', 'quarter', 'net_asset', 'net_profit', 'rental_income', 'retained_earning')
+    list_display = ('short_name', 'quarter', 'year', 'net_asset', 'net_profit', 'rental_income', 'retained_earning')
 
 #Admin class for Financial_Ratio
 class RatioAdmin(admin.ModelAdmin):
     search_fields = ['short_name']
-    list_display = ('short_name', 'quarter', 'roe', 'beta', 'stability1', 'stability2')
+    list_display = ('short_name', 'quarter', 'year', 'roe', 'beta', 'stability1', 'stability2')
 
 # Register your models here.
 admin.site.register(General_Information, GeneralAdmin)
