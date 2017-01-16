@@ -29,18 +29,12 @@ class Dividend_Yield(models.Model):
     quarter = models.CharField(max_length=10)
     div_yield = models.DecimalField(max_digits=5, decimal_places=2)
 
-    #rename object when call via API
-    def __str__(self):
-        return self.short_name
-
 class Dividend_Payout(models.Model):
     short_name = models.ForeignKey(General_Information, on_delete=models.CASCADE)
+    
     quarter = models.CharField(max_length=10)
-    div_per_share = models.DecimalField(max_digits=8, decimal_places=5)
 
-    #rename object when call via API
-    def __str__(self):
-        return self.short_name
+    div_per_share = models.DecimalField(max_digits=8, decimal_places=5)
     
 class Financial_Statement(models.Model):
     short_name = models.ForeignKey(General_Information, on_delete=models.CASCADE)
@@ -50,10 +44,6 @@ class Financial_Statement(models.Model):
     rental_income = models.DecimalField(max_digits=10, decimal_places=2)
     retained_earning = models.DecimalField(max_digits=10, decimal_places=2)
 
-    #rename object when call via API
-    def __str__(self):
-        return self.short_name
-
 class Financial_Ratio(models.Model):
     short_name = models.ForeignKey(General_Information, on_delete=models.CASCADE)
     quarter = models.CharField(max_length=10)
@@ -62,6 +52,4 @@ class Financial_Ratio(models.Model):
     stability1 = models.DecimalField(max_digits=5, decimal_places=2)
     stability2 = models.DecimalField(max_digits=5, decimal_places=2)
 
-    #rename object when call via API
-    def __str__(self):
-        return self.short_name
+#class Quarter_id():
