@@ -1,15 +1,19 @@
 from django.db import models
 
-#fixed dropdown for quarter input
-q1 = 'Q1'
-q2 = 'Q2'
-q3 = 'Q3'
-q4 = 'Q4'
-Quarter_Choice = (
-    (q1, 'Quarter 1'),
-    (q2, 'Quarter 2'),
-    (q3, 'Quarter 3'),
-    (q4, 'Quarter 4'),
+#fixed dropdown for period input
+Period_Choice = (
+    ('Jan', 'January'),
+    ('Feb', 'February'),
+    ('Mar', 'March'),
+    ('Apr', 'April'),
+    ('May', 'May'),
+    ('Jun', 'June'),
+    ('Jul', 'July'),
+    ('Aug', 'August'),
+    ('Sep', 'September'),
+    ('Oct', 'October'),
+    ('Nov', 'November'),
+    ('Dec', 'December')
 )
 
 # Create your models here.
@@ -38,30 +42,46 @@ class General_Information(models.Model):
 
 class Dividend_Yield(models.Model):
     short_name = models.ForeignKey(General_Information, on_delete=models.CASCADE)
-    quarter =  models.CharField(max_length=10, choices=Quarter_Choice)
+    period = models.CharField(max_length=5, choices=Period_Choice, default='Jan')
     year = models.IntegerField(default=2010)
     div_yield = models.DecimalField(max_digits=5, decimal_places=2)
 
+    #rename object when call via API
+    def __str__(self):
+        return self.short_name_id
+
 class Dividend_Payout(models.Model):
     short_name = models.ForeignKey(General_Information, on_delete=models.CASCADE)
-    quarter =  models.CharField(max_length=10, choices=Quarter_Choice)
+    period = models.CharField(max_length=5, choices=Period_Choice, default='Jan')
     year = models.IntegerField(default=2010)
     div_per_share = models.DecimalField(max_digits=8, decimal_places=5)
+
+    #rename object when call via API
+    def __str__(self):
+        return self.short_name_id
     
 class Financial_Statement(models.Model):
     short_name = models.ForeignKey(General_Information, on_delete=models.CASCADE)
-    quarter =  models.CharField(max_length=10, choices=Quarter_Choice)
+    period = models.CharField(max_length=5, choices=Period_Choice, default='Jan')
     year = models.IntegerField(default=2010)
     net_asset = models.DecimalField(max_digits=10, decimal_places=2)
     net_profit = models.DecimalField(max_digits=10, decimal_places=2)
     rental_income = models.DecimalField(max_digits=10, decimal_places=2)
     retained_earning = models.DecimalField(max_digits=10, decimal_places=2)
 
+    #rename object when call via API
+    def __str__(self):
+        return self.short_name_id
+
 class Financial_Ratio(models.Model):
     short_name = models.ForeignKey(General_Information, on_delete=models.CASCADE)
-    quarter =  models.CharField(max_length=10, choices=Quarter_Choice)
+    period = models.CharField(max_length=5, choices=Period_Choice, default='Jan')
     year = models.IntegerField(default=2010)
     roe = models.DecimalField(max_digits=5, decimal_places=2)
     beta = models.DecimalField(max_digits=5, decimal_places=2)
     stability1 = models.DecimalField(max_digits=5, decimal_places=2)
     stability2 = models.DecimalField(max_digits=5, decimal_places=2)
+
+    #rename object when call via API
+    def __str__(self):
+        return self.short_name_id
