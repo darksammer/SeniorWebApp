@@ -38,7 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'valuation.apps.ValuationConfig',
-    'chartit'
+    'chartit',
+    'node_modules.jquery',
+    'node_modules.highcharts',
 ]
 
 MIDDLEWARE = [
