@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import F
 
 #fixed dropdown for period input
 Period_Choice = (
@@ -35,6 +36,7 @@ class General_Information(models.Model):
     property_type = models.CharField(max_length=50)
     ipo_date = models.IntegerField()
     dividend_payout_amount_per_year = models.SmallIntegerField()
+    listed_share = models.DecimalField(max_digits=5, decimal_places=2, null=True)
 
     #rename object when call via API
     def __str__(self):
@@ -77,7 +79,7 @@ class Financial_Ratio(models.Model):
     short_name = models.ForeignKey(General_Information, on_delete=models.CASCADE)
     period = models.CharField(max_length=5, choices=Period_Choice, default='Jan')
     year = models.IntegerField(default=2010)
-    roe = models.DecimalField(max_digits=5, decimal_places=2)
+    eps = models.DecimalField(max_digits=5, decimal_places=2, null=True)
     beta = models.DecimalField(max_digits=5, decimal_places=2)
     stability1 = models.DecimalField(max_digits=5, decimal_places=2)
     stability2 = models.DecimalField(max_digits=5, decimal_places=2)

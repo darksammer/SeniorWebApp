@@ -24,7 +24,7 @@ class StatementAdmin(admin.ModelAdmin):
 #Admin class for Financial_Ratio
 class RatioAdmin(admin.ModelAdmin):
     search_fields = ['short_name']
-    list_display = ('short_name', 'period', 'year', 'roe', 'beta', 'stability1', 'stability2')
+    list_display = ('short_name', 'period', 'year', 'eps', 'beta', 'stability1', 'stability2')
 
 # Register your models here.
 admin.site.register(General_Information, GeneralAdmin)
