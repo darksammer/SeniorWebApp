@@ -1,7 +1,10 @@
+<script type = "text/javascript" src = "{{ STATIC_URL }}js/jquery-3.1.1.min.js"></script>
+<script type = "text/javascript" src = "{{ STATIC_URL }}js/highcharts.js"></script>
+
 <head>
     {% load chartit %}
     {{ chart|load_charts:"container" }}
 </head>
 <body>
-    <div id='container'> Chart here </div>
+    <div id="container"> Chart here </div>
 </body>
