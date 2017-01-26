@@ -3,13 +3,13 @@ from chartit import DataPool, Chart
 from .models import *
 
 # Create your views here.
-def chart_view(request):
+def chart_view(request, name):
     data = \
         DataPool(series=
             [{'options': {
-                'source': Fair_Value.objects.filter(short_name = 'test2')},
+                'source': Fair_Value.objects.filter(short_name = name)},
                 'terms': [
-                    'period','price','fair','short_name']}
+                    'year','price','fair','short_name']}
             ])
 
     cht = Chart(
@@ -22,7 +22,7 @@ def chart_view(request):
                 'color': '#5b9aff',
                 },
             'terms':{
-                'period':['price'],
+                'year':['price'],
                 }},
          {'options':{
                 'type': 'line',
@@ -30,7 +30,7 @@ def chart_view(request):
                 'dashStyle' : 'longdash',
                 'color': '#000000'},
             'terms':{
-                'period':['fair']
+                'year':['fair']
          }}],
         chart_options =
          {'title': {
