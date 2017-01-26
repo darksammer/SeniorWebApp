@@ -26,6 +26,6 @@ def chart_view(request):
              'text': 'sample chart'},
         'xAxis': {
             'title': {
-                'text': 'year number'}}})
+                'text': 'time'}}})
 
     return render_to_response('valuation/chart.html', {'chart': cht})

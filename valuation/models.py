@@ -45,7 +45,7 @@ class General_Information(models.Model):
 class Dividend_Yield(models.Model):
     short_name = models.ForeignKey(General_Information, on_delete=models.CASCADE)
     period = models.CharField(max_length=5, choices=Period_Choice, default='Jan')
-    year = models.IntegerField(default=2010)
+    year = models.IntegerField(null=True)
     div_yield = models.DecimalField(max_digits=5, decimal_places=2)
 
     #rename object when call via API
@@ -55,7 +55,7 @@ class Dividend_Yield(models.Model):
 class Dividend_Payout(models.Model):
     short_name = models.ForeignKey(General_Information, on_delete=models.CASCADE)
     period = models.CharField(max_length=5, choices=Period_Choice, default='Jan')
-    year = models.IntegerField(default=2010)
+    year = models.IntegerField(null=True)
     div_per_share = models.DecimalField(max_digits=8, decimal_places=5)
 
     #rename object when call via API
@@ -65,7 +65,7 @@ class Dividend_Payout(models.Model):
 class Financial_Statement(models.Model):
     short_name = models.ForeignKey(General_Information, on_delete=models.CASCADE)
     period = models.CharField(max_length=5, choices=Period_Choice, default='Jan')
-    year = models.IntegerField(default=2010)
+    year = models.IntegerField(null=True)
     net_asset = models.DecimalField(max_digits=10, decimal_places=2)
     net_profit = models.DecimalField(max_digits=10, decimal_places=2)
     rental_income = models.DecimalField(max_digits=10, decimal_places=2)
@@ -78,7 +78,7 @@ class Financial_Statement(models.Model):
 class Financial_Ratio(models.Model):
     short_name = models.ForeignKey(General_Information, on_delete=models.CASCADE)
     period = models.CharField(max_length=5, choices=Period_Choice, default='Jan')
-    year = models.IntegerField(default=2010)
+    year = models.IntegerField(null=True)
     eps = models.DecimalField(max_digits=5, decimal_places=2, null=True)
     beta = models.DecimalField(max_digits=5, decimal_places=2)
     stability1 = models.DecimalField(max_digits=5, decimal_places=2)
@@ -87,3 +87,15 @@ class Financial_Ratio(models.Model):
     #rename object when call via API
     def __str__(self):
         return self.short_name_id
+
+class Fair_Value(models.Model):
+    short_name = models.ForeignKey(General_Information, on_delete=models.CASCADE)
+    period = models.CharField(max_length=5, choices=Period_Choice, default='Jan')
+    year = models.IntegerField(null=True)
+    price = models.DecimalField(max_digits=8, decimal_places=2, null=True)
+    fair = models.DecimalField(max_digits=8, decimal_places=2, null=True)
+
+    #rename object when call via API
+    def __str__(self):
+        return self.short_name_id
+        
