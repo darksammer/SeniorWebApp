@@ -98,4 +98,3 @@ class Fair_Value(models.Model):
     #rename object when call via API
     def __str__(self):
         return self.short_name_id
-        
