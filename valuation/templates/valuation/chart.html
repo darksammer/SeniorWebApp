@@ -10,7 +10,7 @@
     {% load chartit %}
     {{ chart_list|load_charts:"cht1,cht2" }}
     <div class="row">
-        <div class="col-sm-6"><center><h1>test</h1></center></div>
+        <div class="col-sm-6"><center><h1>{{request.path}}</h1></center></div>
         <div class="col-sm-offset-6" id="cht1"></div>
     </div>
 
