@@ -68,3 +68,6 @@ def chart_view(request, name):
                 'text': 'time'}}})
 
     return render(request,'valuation/chart.html', {'chart_list': [cht1,cht2],})
+
+def fund_view(request):
+    return render(request,'valuation/fund.html')

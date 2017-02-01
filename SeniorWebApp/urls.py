@@ -24,4 +24,5 @@ from valuation import views
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^chart/(?P<name>\w+)/$',views.chart_view, name='chart'),
+    url(r'^fund/',views.fund_view, name='fund'),
 ]
