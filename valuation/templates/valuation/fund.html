@@ -57,12 +57,29 @@
             </div>
 
             <!-- Fund detail -->
-            <div class="col-md-4 col-md-offset-1 well">
+            <div class="col-md-4 col-md-offset-1">
                 <font size="4">รายละเอียดกองทุน</font><br>
-                ประเภทกอง : {{ fund_data.fund_type }}<br>
-                ประเภทอสังหาริมทรัพย์ที่ถือครอง : {{ fund_data.property_type }}<br>
-                ปีที่เข้า IPO : {{ fund_data.ipo_date }}<br>
-                จำนวนครั้งจ่ายปันผลต่อปี : {{ fund_data.dividend_payout_amount_per_year }}<br>
+                <table class="table table-hover">
+                    <tbody>
+                        <tr>
+                            <td>ประเภทกอง</td>
+                            <td class="active" align="center">{{ fund_data.fund_type }}</td>
+                        </tr>
+                        <tr>
+                            <td>ประเภทอสังหาริมทรัพย์ที่ถือครอง</td>
+                            <td class="active" align="center">{{ fund_data.property_type }}</td>
+                        </tr>
+                        <tr>
+                            <td>ปีที่เข้า IPO</td>
+                            <td class="active" align="center">{{ fund_data.ipo_date }}</td>
+                        </tr>
+                        <tr>
+                            <td>จำนวนครั้งจ่ายปันผลต่อปี</td>
+                            <td class="active" align="center">{{ fund_data.dividend_payout_amount_per_year }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
             </div>
             <div class="col-md-3 col-md-offset-1 well">
                 <h2><small>Recommend</small></h2>

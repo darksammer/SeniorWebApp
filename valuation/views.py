@@ -70,6 +70,9 @@ def chart_view(request, name):
 
     return render(request,'valuation/chart.html', {'chart_list': [cht1,cht2],})
 
+def index_view(request):
+    return render(request,'valuation/Home.html')
+
 def fund_view(request,name):
 
     try:
