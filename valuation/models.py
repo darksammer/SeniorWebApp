@@ -24,8 +24,8 @@ class General_Information(models.Model):
 
     #fixed dropdown for fund_type
     LEASE_FREE = 'LF'
-    LEASE = 'L'
-    FREE = 'F'
+    LEASE = 'Leasehold'
+    FREE = 'Freehold'
     Fund_Type_Choices = (
         (LEASE_FREE, 'Leasehold & Freehold'),
         (LEASE, 'Leasehold'),
