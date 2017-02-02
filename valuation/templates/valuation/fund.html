@@ -12,7 +12,10 @@
         <script type="text/javascript" src="http://code.highcharts.com/highcharts.js"></script>
         <!-- Bootstrap -->
         <script src = "//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-        
+        <!-- Chartit -->
+        {% load chartit %}
+        {{ chart|load_charts:"value_chart" }}
+
         <!-- header -->
         <nav class="navbar navbar-default">
             <div class="container-fluid">
@@ -42,14 +45,13 @@
         <!-- Content -->
         <div class="container">
             <div class="row">
-                {% with request.path as fund_name %}
-                {{fund_name}}
-                {% endwith %}
-
-                <!-- {% if request.path == "/fund/sample"  %}
-                    path is {{request.path}}
-                {% endif %} -->
-                
+                <div class="col-md-offset-1">
+                    <h1><small>{{ name|upper }} : {{ fund_data.full_name }}</small></h1>
+                </div> 
+            </div>
+            <div class="col-md-8 col-md-offset-1">
+                <div id="value_chart">
+                </div>
             </div>
         </div>
 
