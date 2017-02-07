@@ -25,6 +25,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^index/',views.index_view, name='index'),
     url(r'^search/',views.search_view, name='search'),
+    url(r'^ranking/',views.ranking_view, name='ranking'),
     url(r'^chart/(?P<name>\w+)/$',views.chart_view, name='chart'),
     url(r'^fund/(?P<name>\w+)/$',views.fund_view, name='fund'),
 ]
