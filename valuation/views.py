@@ -1,4 +1,4 @@
-from django.shortcuts import render,render_to_response
+from django.shortcuts import render,render_to_response, redirect
 from django.http import Http404
 from chartit import DataPool, Chart
 from .models import *
@@ -72,6 +72,13 @@ def chart_view(request, name):
 
 def index_view(request):
     return render(request,'valuation/Home.html')
+
+def search_view(request):
+    search_string = request.GET.get('q')
+    if search_string == "":
+        raise Http404("Fund not found")
+    else:
+        return redirect(fund_view, name=search_string)
 
 def fund_view(request,name):
 
