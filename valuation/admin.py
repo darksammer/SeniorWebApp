@@ -9,27 +9,27 @@ class GeneralAdmin(admin.ModelAdmin):
 #Admin class for Dividend_Yield
 class YieldAdmin(admin.ModelAdmin):
     search_fields = ['short_name']
-    list_display = ('short_name', 'period', 'year', 'div_yield')
+    list_display = ('short_name', 'period', 'div_yield')
 
 #Admin class for Dividend_Payout
 class PayoutAdmin(admin.ModelAdmin):
     search_fields = ['short_name']
-    list_display = ('short_name', 'period', 'year', 'div_per_share')
+    list_display = ('short_name', 'period', 'div_per_share')
 
 #Admin class for Financial_Statement
 class StatementAdmin(admin.ModelAdmin):
     search_fields = ['short_name']
-    list_display = ('short_name', 'period', 'year', 'net_asset', 'net_profit', 'rental_income', 'retained_earning')
+    list_display = ('short_name', 'period', 'net_asset', 'net_profit', 'rental_income', 'retained_earning')
 
 #Admin class for Financial_Ratio
 class RatioAdmin(admin.ModelAdmin):
     search_fields = ['short_name']
-    list_display = ('short_name', 'period', 'year', 'eps', 'beta', 'stability1', 'stability2')
+    list_display = ('short_name', 'period', 'eps', 'beta', 'stability1', 'stability2')
 
 #Admin class for Fair_Value
 class FairAdmin(admin.ModelAdmin):
     search_fields = ['short_name']
-    list_display = ('short_name', 'year', 'period', 'price', 'fair')
+    list_display = ('short_name', 'period', 'price', 'fair')
 
 # Register your models here.
 admin.site.register(General_Information, GeneralAdmin)
