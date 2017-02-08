@@ -19,7 +19,7 @@
                 <div class="col-md-offset-2">
                     <div class="navbar-header">
                         <!-- header logo -->
-                        <a class="navbar-brand" href="#">Property Fund </a>              
+                        <a class="navbar-brand" href="{% url "index" %}">Property Fund </a>              
                     </div>  
                 </div>
 
@@ -44,7 +44,16 @@
                 <ul class="nav navbar-nav page-header">
                     <li><a href="{% url "index" %}">หน้าแรก</a></li>
                     <li><a href="a">ราคาซื้อขาย</a></li>
-                    <li><a href="{% url "ranking" %}">อันดับกองทุน</a></li>
+
+                    <!-- Sub menu -->
+                    <li class="dropdown-submenu">
+                        <a class="ranking">อันดับกองทุน <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url "ranking" %}">Dividend Yield</a></li>
+                            <li><a href="{% url "ranking" %}">Price & Fair</a></li>
+                        </ul>
+                    </li>
+                    
                     <li><a href="#">ข่าวสาร</a></li>
                     <li><a href="#">ส่วนให้ความรู้</a></li>
                     <li><a href="#">บทความการลงทุน</a></li>
@@ -91,7 +100,20 @@
         </div>
         
             
-        
+        <!-- script for menu dropdown -->
+        <script>
+            $(document).ready(function(){
+                $('.dropdown-submenu a.ranking').on("click", function(e){
+                    $(this).next('ul').toggle();
+                    e.stopPropagation();
+                    e.preventDefault();
+                });
+
+                $(document).on("click", function(){
+                    $('.dropdown-menu').hide();
+                });
+            });
+        </script>
 
     </body>
 </html>

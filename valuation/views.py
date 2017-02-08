@@ -130,5 +130,6 @@ def fund_view(request,name):
     return render(request,'valuation/fund.html',{'name': name , 'fund_data':fund_data, 'chart':value_chart})
 
 def ranking_view(request):
-    fund_list = General_Information.objects.all().order_by('Dividend_Yield')
-    return render(request, 'valuation/ranking.html')
+    #ranking by latest_yield
+    fund_list = General_Information.objects.all().order_by('latest_yield')
+    return render(request, 'valuation/ranking.html' , {'fund_list':fund_list})
