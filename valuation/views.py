@@ -92,7 +92,7 @@ def fund_view(request,name):
             [{'options': {
                 'source': Fair_Value.objects.filter(short_name = name)},
                 'terms': [
-                    'year','price','fair','short_name']}
+                    'period','price','fair','short_name']}
             ])
 
     value_chart = Chart(
@@ -105,7 +105,7 @@ def fund_view(request,name):
                 'color': '#5b9aff',
                 },
             'terms':{
-                'year':['price'],
+                'period':['price'],
                 }},
          {'options':{
                 'type': 'line',
@@ -113,20 +113,22 @@ def fund_view(request,name):
                 'dashStyle' : 'longdash',
                 'color': '#000000'},
             'terms':{
-                'year':['fair']
+                'period':['fair']
          }}],
         chart_options =
          {'title': {
             'text': 'Fair Price'},
             'xAxis': {
+                'type': 'datetime',
                 'title': {'text': 'time'}},
             'yAxis':{
-                'title': {'text': 'Price'}}
+                'title': {'text': 'Price'}},
+            
         })
 
     
     return render(request,'valuation/fund.html',{'name': name , 'fund_data':fund_data, 'chart':value_chart})
 
 def ranking_view(request):
-    fund_list = General_Information.objects.all().order_by('Dividend_Yield__div_yield')
+    fund_list = General_Information.objects.all().order_by('Dividend_Yield')
     return render(request, 'valuation/ranking.html')
