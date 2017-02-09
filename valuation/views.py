@@ -133,7 +133,9 @@ def fund_view(request,name):
 def ranking_view(request,rank_type):
     #ranking by latest_yield
     if rank_type == "yield":
-        fund_list = General_Information.objects.all().order_by('latest_yield')
+        fund_list = Dividend_Yield.objects.raw('select id, max(period) as period, div_yield, short_name_id from valuation_dividend_yield\
+                                                        group by short_name_id\
+                                                        order by div_yield DESC, period DESC')
         return render(request, 'valuation/ranking.html' , {'fund_list':fund_list})
     #ranking by price&fair
     elif rank_type == "fair":
