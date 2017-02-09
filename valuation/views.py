@@ -1,5 +1,6 @@
 from django.shortcuts import render,render_to_response, redirect
 from django.http import Http404
+from django.db.models import F
 from chartit import DataPool, Chart
 from .models import *
 
@@ -129,7 +130,17 @@ def fund_view(request,name):
     
     return render(request,'valuation/fund.html',{'name': name , 'fund_data':fund_data, 'chart':value_chart})
 
-def ranking_view(request):
+def ranking_view(request,rank_type):
     #ranking by latest_yield
-    fund_list = General_Information.objects.all().order_by('latest_yield')
-    return render(request, 'valuation/ranking.html' , {'fund_list':fund_list})
+    if rank_type == "yield":
+        fund_list = General_Information.objects.all().order_by('latest_yield')
+        return render(request, 'valuation/ranking.html' , {'fund_list':fund_list})
+    #ranking by price&fair
+    elif rank_type == "fair":
+        fund_list = Fair_Value.objects.raw('select id , short_name_id , price , fair , max(period) as period from valuation_fair_value\
+                                                        group by short_name_id\
+                                                        order by price-fair DESC, period')
+        return render(request, 'valuation/ranking.html' , {'fund_list':fund_list})
+    #anything else
+    else:
+        raise Http404("Page not found")

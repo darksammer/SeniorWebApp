@@ -52,8 +52,8 @@
                     <li class="dropdown-submenu">
                         <a class="ranking">อันดับกองทุน <span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="{% url "ranking" %}">Dividend Yield</a></li>
-                            <li><a href="{% url "ranking" %}">Price & Fair</a></li>
+                            <li><a href="{% url "ranking" rank_type="yield" %}">Dividend Yield</a></li>
+                            <li><a href="{% url "ranking" rank_type="fair" %}">Price & Fair</a></li>
                         </ul>
                     </li>
 
