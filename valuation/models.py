@@ -23,7 +23,7 @@ class General_Information(models.Model):
     full_name = models.CharField(max_length=100)
 
     #fixed dropdown for fund_type
-    LEASE_FREE = 'LF'
+    LEASE_FREE = 'Leasehold & Freehold'
     LEASE = 'Leasehold'
     FREE = 'Freehold'
     Fund_Type_Choices = (
