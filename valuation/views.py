@@ -133,16 +133,20 @@ def fund_view(request,name):
 def ranking_view(request,rank_type):
     #ranking by latest_yield
     if rank_type == "yield":
-        fund_list = Dividend_Yield.objects.raw('select id, max(period) as period, div_yield, short_name_id from valuation_dividend_yield\
-                                                        group by short_name_id\
-                                                        order by div_yield DESC, period DESC')
-        return render(request, 'valuation/ranking.html' , {'fund_list':fund_list})
+        fund_list = Dividend_Yield.objects.raw('select valuation_dividend_yield.id, max(valuation_dividend_yield.period) as period, valuation_dividend_yield.div_yield,\
+                                                valuation_dividend_yield.short_name_id , valuation_general_information.full_name from valuation_dividend_yield\
+                                                join valuation_general_information on valuation_dividend_yield.short_name_id = valuation_general_information.short_name\
+                                                group by short_name_id\
+                                                order by div_yield DESC, period DESC')
+        return render(request, 'valuation/ranking.html' , {'fund_list':fund_list, 'rank_type':rank_type})
     #ranking by price&fair
     elif rank_type == "fair":
-        fund_list = Fair_Value.objects.raw('select id , short_name_id , price , fair , max(period) as period from valuation_fair_value\
-                                                        group by short_name_id\
-                                                        order by price-fair DESC, period')
-        return render(request, 'valuation/ranking.html' , {'fund_list':fund_list})
+        fund_list = Fair_Value.objects.raw('select valuation_fair_value.id , valuation_fair_value.short_name_id , valuation_general_information.full_name , valuation_fair_value.price - valuation_fair_value.fair as diff ,\
+                                            max(valuation_fair_value.period) as period from valuation_fair_value\
+                                            join valuation_general_information on valuation_fair_value.short_name_id = valuation_general_information.short_name\
+                                            group by short_name_id\
+                                            order by diff DESC, period')
+        return render(request, 'valuation/ranking.html' , {'fund_list':fund_list, 'rank_type':rank_type})
     #anything else
     else:
         raise Http404("Page not found")
