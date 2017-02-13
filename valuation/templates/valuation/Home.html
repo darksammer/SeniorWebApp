@@ -89,7 +89,7 @@
                     {% for each in fund_list %}
                     <tr>
                         <td>{{ forloop.counter }}</td>
-                        <td><a href="{% url "fund" name=each.short_name %}"> {{ each.short_name }}</a></td>
+                        <td><a href="{% url "fund" name=each.short_name %}"> {{ each.short_name | upper }}</a></td>
                         <td>{{ each.div_yield }}%</td>
                     </tr>
                     {% endfor %}

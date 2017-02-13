@@ -13,14 +13,16 @@ def index_view(request):
                                                 order by div_yield DESC, period DESC\
                                                 limit 5')
     
-    data = \
-        DataPool(series=
-            [{'options': {
-                'source': Fair_Value.objects.raw('select id, short_name_id, period, price, fair\
+    best_fund = Fair_Value.objects.raw('select id, short_name_id, period, price, fair\
                                                     from valuation_fair_value\
                                                     where short_name_id = (select short_name_id from valuation_dividend_yield\
                                                                             order by div_yield DESC limit 1)\
-                                                    group by short_name_id, period')},
+                                                    group by short_name_id, period')
+
+    data = \
+        DataPool(series=
+            [{'options': {
+                'source': best_fund},
                 'terms': [
                     'period','price','fair','short_name_id']}
             ])
@@ -47,7 +49,7 @@ def index_view(request):
          }}],
         chart_options =
          {'title': {
-            'text': 'Fair Price'},
+            'text': best_fund[0].short_name_id.upper()},
             'xAxis': {
                 'type': 'datetime',
                 'title': {'text': 'time'}},
