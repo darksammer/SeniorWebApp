@@ -80,7 +80,7 @@
                             <td>{{ forloop.counter }}</td>
                             <td><a href="{% url "fund" name=each.short_name %}"> {{ each.short_name }}</a></td>
                             <td>{{ each.full_name }}</td>
-                            <td>{{ each.div_yield }}</td>
+                            <td>{{ each.div_yield }}%</td>
                         </tr>
                     {% endfor %}
                 <!-- fair rank -->

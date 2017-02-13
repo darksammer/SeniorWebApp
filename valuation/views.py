@@ -5,16 +5,27 @@ from chartit import DataPool, Chart
 from .models import *
 
 # Create your views here.
-def chart_view(request, name):
+def index_view(request):
+    fund_list = Dividend_Yield.objects.raw('select valuation_dividend_yield.id, max(valuation_dividend_yield.period) as period, valuation_dividend_yield.div_yield,\
+                                                valuation_dividend_yield.short_name_id , valuation_general_information.full_name from valuation_dividend_yield\
+                                                join valuation_general_information on valuation_dividend_yield.short_name_id = valuation_general_information.short_name\
+                                                group by short_name_id\
+                                                order by div_yield DESC, period DESC\
+                                                limit 5')
+    
     data = \
         DataPool(series=
             [{'options': {
-                'source': Fair_Value.objects.filter(short_name = name)},
+                'source': Fair_Value.objects.raw('select id, short_name_id, period, price, fair\
+                                                    from valuation_fair_value\
+                                                    where short_name_id = (select short_name_id from valuation_dividend_yield\
+                                                                            order by div_yield DESC limit 1)\
+                                                    group by short_name_id, period')},
                 'terms': [
-                    'year','price','fair','short_name']}
+                    'period','price','fair','short_name_id']}
             ])
 
-    cht1 = Chart(
+    index_chart = Chart(
         datasource = data,
         series_options = 
         [{'options':{
@@ -24,7 +35,7 @@ def chart_view(request, name):
                 'color': '#5b9aff',
                 },
             'terms':{
-                'year':['price'],
+                'period':['price'],
                 }},
          {'options':{
                 'type': 'line',
@@ -32,47 +43,20 @@ def chart_view(request, name):
                 'dashStyle' : 'longdash',
                 'color': '#000000'},
             'terms':{
-                'year':['fair']
+                'period':['fair']
          }}],
         chart_options =
          {'title': {
-             'text': 'sample chart'},
-        'xAxis': {
-            'title': {
-                'text': 'time'}}})
+            'text': 'Fair Price'},
+            'xAxis': {
+                'type': 'datetime',
+                'title': {'text': 'time'}},
+            'yAxis':{
+                'title': {'text': 'Price'}},
+            
+        })
 
-
-    cht2 = Chart(
-        datasource = data,
-        series_options = 
-        [{'options':{
-                'type': 'area',
-                'stacking': False,
-                'fillOpacity': 0.1,
-                'color': '#000000',
-                },
-            'terms':{
-                'year':['price'],
-                }},
-         {'options':{
-                'type': 'line',
-                'stacking' : False,
-                'dashStyle' : 'longdash',
-                'color': '#000000'},
-            'terms':{
-                'year':['fair']
-         }}],
-        chart_options =
-         {'title': {
-             'text': 'sample chart'},
-        'xAxis': {
-            'title': {
-                'text': 'time'}}})
-
-    return render(request,'valuation/chart.html', {'chart_list': [cht1,cht2],})
-
-def index_view(request):
-    return render(request,'valuation/Home.html')
+    return render(request,'valuation/Home.html', {'fund_list':fund_list, 'chart':index_chart})
 
 def search_view(request):
     search_string = request.GET.get('q')

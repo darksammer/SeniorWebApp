@@ -10,6 +10,9 @@
         <script type="text/javascript" src="{% static "js/highcharts.js" %}"></script>
         <!-- Bootstrap js -->
         <script type="text/javascript" src="{% static "js/bootstrap.min.js" %}"></script>
+
+        {% load chartit %}
+        {{ chart|load_charts:"index_chart" }}
     </head>
 
     <body>
@@ -65,9 +68,11 @@
         <div class="container">
             <div class="row">
                 <br></br>
-                <div class="col-md-offset-2 col-md-4">
+                <div class="col-md-offset-1 col-md-5">
+                    <!-- index chart -->
+                    <div id="index_chart">
+                    </div>
                     
-                    <img src="http://upic.me/i/yy/line_graph.png"  class="img-rounded"> 
                 </div>
             </div>
 
@@ -76,23 +81,18 @@
                 <div class="col-md-offset-2 col-md-4">
                 <table class="table table-striped">
                     <tr>
-                        <th>#</th>
+                        <th>อันดับ</th>
                         <th>กองทุน</th>
-                        <th>ราคา(ล่าสุด)</th>
-                        <th>ปันผล</th>
+                        <th>อัตราปันผล</th>
                     </tr>
+
+                    {% for each in fund_list %}
                     <tr>
-                        <td>1</td>
-                        <td>bkkcp</td>
-                        <td>17.77</td>
-                        <td>20%</td>
+                        <td>{{ forloop.counter }}</td>
+                        <td><a href="{% url "fund" name=each.short_name %}"> {{ each.short_name }}</a></td>
+                        <td>{{ each.div_yield }}%</td>
                     </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>M-STOR</td>
-                        <td>10.50</td>
-                        <td>1.111%</td>
-                    </tr>
+                    {% endfor %}
                 </table>
                 </div>
             </div>

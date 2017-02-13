@@ -4,7 +4,7 @@ from .models import *
 #Admin class for General_Information
 class GeneralAdmin(admin.ModelAdmin):
     search_fields = ['short_name']
-    list_display = ('short_name', 'full_name', 'fund_type', 'listed_share', 'latest_yield')
+    list_display = ('short_name', 'full_name', 'fund_type', 'listed_share')
 
 #Admin class for Dividend_Yield
 class YieldAdmin(admin.ModelAdmin):
