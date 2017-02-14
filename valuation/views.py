@@ -1,6 +1,7 @@
 from django.shortcuts import render,render_to_response, redirect
 from django.http import Http404
 from django.db.models import F
+from django.utils import timezone
 from chartit import DataPool, Chart
 from .models import *
 
@@ -73,6 +74,10 @@ def fund_view(request,name):
         fund_data = General_Information.objects.get(short_name = name)
     except:
         raise Http404('Fund not found')
+    #fund age
+    age = timezone.now().year - fund_data.ipo_date
+
+    historical_div_yield = Dividend_Yield.objects.filter(short_name = name)
 
     data = \
         DataPool(series=
@@ -114,7 +119,7 @@ def fund_view(request,name):
         })
 
     
-    return render(request,'valuation/fund.html',{'name': name , 'fund_data':fund_data, 'chart':value_chart})
+    return render(request,'valuation/fund.html',{'name': name, 'age':age, 'fund_data':fund_data, 'div_yield':historical_div_yield, 'chart':value_chart})
 
 def ranking_view(request,rank_type):
     #ranking by latest_yield

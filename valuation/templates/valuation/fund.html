@@ -103,9 +103,27 @@
                 </table>
 
             </div>
-            <div class="col-md-3 col-md-offset-1 well">
-                <h2><small>Recommend</small></h2>
-                aaa
+            <div class="col-md-3 col-md-offset-1">
+                <font size="4">Signal</font><br>
+                <!-- Recommend -->
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <!-- IPO Signal -->
+                            {% if age < 3 %}
+                                <td class="danger">Recent IPO</td>
+                            {% endif %}
+                            
+                            {% for each in div_yield %}
+                                <td>{{each.div_yield}}</td>
+                            {% endfor %}
+
+                            <!-- Dividend -->
+                            {}
+
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
 
