@@ -78,6 +78,8 @@ def fund_view(request,name):
     age = timezone.now().year - fund_data.ipo_date
 
     historical_div_yield = Dividend_Yield.objects.filter(short_name = name)
+    stability1 = Dividend_Yield.objects.get_stability1(fund_name = name)
+    stability2 = Dividend_Yield.objects.get_stability2(fund_name = name)
 
     data = \
         DataPool(series=
@@ -119,7 +121,9 @@ def fund_view(request,name):
         })
 
     
-    return render(request,'valuation/fund.html',{'name': name, 'age':age, 'fund_data':fund_data, 'div_yield':historical_div_yield, 'chart':value_chart})
+    return render(request,'valuation/fund.html',{'name': name, 'age':age, 'fund_data':fund_data,
+                                                    'historical_div_yield':historical_div_yield, 'chart':value_chart,
+                                                    'stability1':stability1, 'stability2':stability2})
 
 def ranking_view(request,rank_type):
     #ranking by latest_yield

@@ -108,20 +108,22 @@
                 <!-- Recommend -->
                 <table class="table">
                     <tbody>
-                        <tr>
-                            <!-- IPO Signal -->
-                            {% if age < 3 %}
+                        <!-- IPO Signal -->
+                        {% if age < 3 %}
+                            <tr>
                                 <td class="danger">Recent IPO</td>
-                            {% endif %}
-                            
-                            {% for each in div_yield %}
-                                <td>{{each.div_yield}}</td>
-                            {% endfor %}
+                            </tr>
+                        {% endif %}
+                        <!-- Dividend -->
+                            <tr>
+                                <td>Stability1</td>
+                                <td>{{stability1}}</td>
+                            </tr>
+                            <tr>
+                                <td>Stability2</td>
+                                <td>{{stability2}}</td>
+                            </tr>
 
-                            <!-- Dividend -->
-                            {}
-
-                        </tr>
                     </tbody>
                 </table>
             </div>

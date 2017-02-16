@@ -1,5 +1,6 @@
 from django.db import models
 from django.db.models import F
+from django.http import Http404
 
 #fixed dropdown for period input
 Period_Choice = (
@@ -42,10 +43,66 @@ class General_Information(models.Model):
     def __str__(self):
         return self.short_name
 
+#stability calculation api
+class YieldManager(models.Manager):
+    #stability1
+    def get_stability1(self,fund_name):
+        try:
+            historical_yield = Dividend_Yield.objects.filter(short_name = fund_name)
+
+            #yield avg calculation
+            sum_yield = 0
+            counter = 0
+            for each in historical_yield:
+                sum_yield += each.div_yield
+                counter += 1
+            
+            avg = sum_yield/counter
+
+            #get latest yield
+            latest_yield = Dividend_Yield.objects.filter(short_name = fund_name).latest('period')
+            
+            stability1 = latest_yield.div_yield - avg
+
+            return stability1
+        except:
+            raise Http404('No data')
+    
+    #stability2
+    def get_stability2(self,fund_name):
+        try:
+            latest_year_yield = Dividend_Yield.objects.filter(short_name = fund_name).order_by('-period')[:4]
+            former_year_yield = Dividend_Yield.objects.filter(short_name = fund_name).order_by('-period')[4:][:4]
+
+            #avg latest_year
+            counter = 0
+            sum_yield = 0
+            for each in latest_year_yield:
+                sum_yield += each.div_yield
+                counter += 1
+            
+            latest_avg = sum_yield/counter
+
+            #avg former_year
+            counter = 0
+            sum_yield = 0
+            for each in former_year_yield:
+                sum_yield += each.div_yield
+                counter += 1
+            
+            former_avg = sum_yield/counter
+
+            stability2 = latest_avg - former_avg
+
+            return stability2
+        except:
+            raise Http404('No data')
+
 class Dividend_Yield(models.Model):
     short_name = models.ForeignKey(General_Information, on_delete=models.CASCADE)
     period = models.DateField(auto_now=False, auto_now_add=False)
     div_yield = models.DecimalField(max_digits=5, decimal_places=2)
+    objects = YieldManager()
 
     #rename object when call via API
     def __str__(self):
