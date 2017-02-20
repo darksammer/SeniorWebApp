@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models import F
 from django.http import Http404
+from decimal import Decimal
 
 #fixed dropdown for period input
 Period_Choice = (
@@ -62,11 +63,12 @@ class YieldManager(models.Manager):
             #get latest yield
             latest_yield = Dividend_Yield.objects.filter(short_name = fund_name).latest('period')
             
-            stability1 = latest_yield.div_yield - avg
+            stability1 = '{0:.3g}'.format(latest_yield.div_yield - avg)
+            stability1 = Decimal(stability1)
 
             return stability1
         except:
-            raise Http404('No data')
+            return "unavailable"
     
     #stability2
     def get_stability2(self,fund_name):
@@ -92,11 +94,12 @@ class YieldManager(models.Manager):
             
             former_avg = sum_yield/counter
 
-            stability2 = latest_avg - former_avg
+            stability2 = '{0:.3g}'.format(latest_avg - former_avg)
+            stability2 = Decimal(stability2)
 
             return stability2
         except:
-            raise Http404('No data')
+            return "unavailable"
 
 class Dividend_Yield(models.Model):
     short_name = models.ForeignKey(General_Information, on_delete=models.CASCADE)

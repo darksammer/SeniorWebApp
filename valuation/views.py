@@ -74,12 +74,35 @@ def fund_view(request,name):
         fund_data = General_Information.objects.get(short_name = name)
     except:
         raise Http404('Fund not found')
-    #fund age
-    age = timezone.now().year - fund_data.ipo_date
+    
+    current_year = timezone.now().year-6
 
-    historical_div_yield = Dividend_Yield.objects.filter(short_name = name)
+    #fund age
+    age = current_year - fund_data.ipo_date
+
+    #get dividend stability
     stability1 = Dividend_Yield.objects.get_stability1(fund_name = name)
     stability2 = Dividend_Yield.objects.get_stability2(fund_name = name)
+
+    if (stability1 >= -1 and stability1 <= 2) and (stability2 >= -1 and stability2 <= 2):
+        stability_status = "Consistent"
+    elif stability1 < -1 or stability2 < -1:
+        stability_status = "Declined"
+    else:
+        stability_status = "Growth"
+
+    #detect payout consistent
+    historical_yield = Dividend_Yield.objects.filter(short_name = name).filter(period__year = current_year-1)
+    dividend_status =  len(historical_yield) / fund_data.dividend_payout_amount_per_year
+
+    if dividend_status == 1:
+        payout_consistent = 'Consistent'
+    elif dividend_status > 1:
+        payout_consistent = 'Growth'
+    else:
+        payout_consistent = 'Zero payout detected in last year'
+
+    #get stability status
 
     data = \
         DataPool(series=
@@ -122,7 +145,9 @@ def fund_view(request,name):
 
     
     return render(request,'valuation/fund.html',{'name': name, 'age':age, 'fund_data':fund_data,
-                                                    'historical_div_yield':historical_div_yield, 'chart':value_chart,
+                                                    'chart':value_chart, 
+                                                    'payout_consistent':payout_consistent, 'historical_yield':historical_yield,
+                                                    'stability_status':stability_status,
                                                     'stability1':stability1, 'stability2':stability2})
 
 def ranking_view(request,rank_type):

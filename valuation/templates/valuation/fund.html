@@ -111,6 +111,7 @@
                         <!-- IPO Signal -->
                         {% if age < 3 %}
                             <tr>
+                                <td>อายุกอง</td>
                                 <td class="danger">Recent IPO</td>
                             </tr>
                         {% endif %}
@@ -123,6 +124,32 @@
                                 <td>Stability2</td>
                                 <td>{{stability2}}</td>
                             </tr>
+
+                            <tr>
+                                <td>อัตราจ่ายปันผล</td>
+                                {% if stability_status == "Consistent" %}
+                                    <td class="success">{{stability_status}}</td>
+                                {% elif stability_status == "Declined" %}
+                                    <td class="danger">{{stability_status}}</td>
+                                {% else %}
+                                    <td class="warning">{{stability_status}}</td>
+                                {% endif %}
+                            </tr>
+
+                            <tr>
+                                <td>จำนวนครั้งการจ่ายปันผล</td>
+                                {% if payout_consistent == "Consistent" or payout_consistent == "Growth" %}
+                                    <td class="success">{{payout_consistent}}</td>
+                                {% else %}
+                                    <td class="danger">{{payout_consistent}}</td>
+                                {% endif %}
+                            </tr>
+
+                            {% for each in historical_yield %}
+                            <tr>
+                                <td>{{each.period}}</td>
+                            </tr>
+                            {% endfor %}
 
                     </tbody>
                 </table>
