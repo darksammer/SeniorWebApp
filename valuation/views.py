@@ -103,7 +103,7 @@ def fund_view(request,name):
         payout_consistent = 'Zero payout detected in last year'
 
     #Retained Earning
-    retained = Financial_Statement.objects.filter(short_name = name).filter(period__year = current_year-1).filter(quarter = 'Q4')
+    retained = Financial_Statement.objects.filter(short_name = name).filter(period__year = current_year-1)
 
     data = \
         DataPool(series=

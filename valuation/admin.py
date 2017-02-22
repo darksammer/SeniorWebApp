@@ -24,7 +24,7 @@ class StatementAdmin(admin.ModelAdmin):
 #Admin class for Financial_Ratio
 class RatioAdmin(admin.ModelAdmin):
     search_fields = ['short_name']
-    list_display = ('short_name', 'period', 'eps', 'beta', 'stability1', 'stability2')
+    list_display = ('short_name', 'period', 'eps')
 
 #Admin class for Fair_Value
 class FairAdmin(admin.ModelAdmin):
