@@ -98,11 +98,12 @@ def fund_view(request,name):
     if dividend_status == 1:
         payout_consistent = 'Consistent'
     elif dividend_status > 1:
-        payout_consistent = 'Growth'
+        payout_consistent = 'More than usual'
     else:
         payout_consistent = 'Zero payout detected in last year'
 
-    #get stability status
+    #Retained Earning
+    retained = Financial_Statement.objects.filter(short_name = name).filter(period__year = current_year-1).filter(quarter = 'Q4')
 
     data = \
         DataPool(series=
@@ -146,7 +147,7 @@ def fund_view(request,name):
     
     return render(request,'valuation/fund.html',{'name': name, 'age':age, 'fund_data':fund_data,
                                                     'chart':value_chart, 
-                                                    'payout_consistent':payout_consistent, 'historical_yield':historical_yield,
+                                                    'payout_consistent':payout_consistent, 'retained':retained,
                                                     'stability_status':stability_status,
                                                     'stability1':stability1, 'stability2':stability2})
 

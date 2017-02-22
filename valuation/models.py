@@ -19,6 +19,13 @@ Period_Choice = (
     ('Dec', 'December')
 )
 
+Quarter_Choice = (
+    ('Q1','Q1'),
+    ('Q2','Q2'),
+    ('Q3','Q3'),
+    ('Q4','Q4')
+)
+
 # Create your models here.
 class General_Information(models.Model):
     short_name = models.CharField(primary_key=True, max_length=10)
@@ -123,6 +130,7 @@ class Dividend_Payout(models.Model):
 class Financial_Statement(models.Model):
     short_name = models.ForeignKey(General_Information, on_delete=models.CASCADE)
     period = models.DateField(auto_now=False, auto_now_add=False)
+    quarter = models.CharField(max_length = 2, choices = Quarter_Choice, null=True)
     net_asset = models.DecimalField(max_digits=10, decimal_places=2)
     net_profit = models.DecimalField(max_digits=10, decimal_places=2)
     rental_income = models.DecimalField(max_digits=10, decimal_places=2)
@@ -135,6 +143,7 @@ class Financial_Statement(models.Model):
 class Financial_Ratio(models.Model):
     short_name = models.ForeignKey(General_Information, on_delete=models.CASCADE)
     period = models.DateField(auto_now=False, auto_now_add=False)
+    quarter = models.CharField(max_length = 2, choices = Quarter_Choice, null=True)
     eps = models.DecimalField(max_digits=5, decimal_places=2, null=True)
     beta = models.DecimalField(max_digits=5, decimal_places=2)
     stability1 = models.DecimalField(max_digits=5, decimal_places=2)
