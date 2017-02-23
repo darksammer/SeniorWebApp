@@ -75,7 +75,7 @@ def fund_view(request,name):
     except:
         raise Http404('Fund not found')
     
-    current_year = timezone.now().year-6
+    current_year = timezone.now().year
 
     #fund age
     age = current_year - fund_data.ipo_date
@@ -103,7 +103,31 @@ def fund_view(request,name):
         payout_consistent = 'Zero payout detected in last year'
 
     #Retained Earning
-    retained = Financial_Statement.objects.filter(short_name = name).filter(period__year = current_year-1)
+    retained_data = Financial_Statement.objects.filter(short_name = name).order_by('-period')
+    if age < 3:
+        retained_status = "No data to compare"
+    else:
+        first_year_compare = retained_data[0].retained_earning - retained_data[1].retained_earning
+        second_year_compare = retained_data[0].retained_earning - retained_data[2].retained_earning
+
+        #first year status
+        if abs(first_year_compare) > retained_data[1].retained_earning*10/100:
+            if first_year_compare > 0:
+                first_year_status = "Growth"
+            else:
+                first_year_status = "Declined"
+        elif abs(first_year_compare) < retained_data[1].retained_earning*10/100 or first_year_compare == 0:
+            first_year_status = "Consistent"
+
+        #second year status
+        if abs(second_year_compare) > retained_data[2].retained_earning*10/100:
+            if second_year_compare > 0:
+                second_year_status = "Growth"
+            else:
+                second_year_status = "Declined"
+        elif abs(second_year_compare) < retained_data[2].retained_earning*10/100 or second_year_compare == 0:
+            second_year_status = "Consistent"
+
 
     data = \
         DataPool(series=
@@ -147,9 +171,9 @@ def fund_view(request,name):
     
     return render(request,'valuation/fund.html',{'name': name, 'age':age, 'fund_data':fund_data,
                                                     'chart':value_chart, 
-                                                    'payout_consistent':payout_consistent, 'retained':retained,
+                                                    'payout_consistent':payout_consistent, 'retained':retained_data,
                                                     'stability_status':stability_status,
-                                                    'stability1':stability1, 'stability2':stability2})
+                                                    'first_year_status':first_year_status, 'second_year_status':second_year_status})
 
 def ranking_view(request,rank_type):
     #ranking by latest_yield

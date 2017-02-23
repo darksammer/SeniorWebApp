@@ -117,7 +117,7 @@
                         {% endif %}
                         <!-- Dividend -->
                             <tr>
-                                <td>อัตราจ่ายปันผล</td>
+                                <td>Dividend Yield</td>
                                 {% if stability_status == "Consistent" %}
                                     <td class="success">{{stability_status}}</td>
                                 {% elif stability_status == "Declined" %}
@@ -135,12 +135,22 @@
                                     <td class="danger">{{payout_consistent}}</td>
                                 {% endif %}
                             </tr>
-                            
+
                             {% for each in retained %}
                             <tr>
-                                <td>{{each}}</td>
+                                <td>{{each.period}}</td>
+                                <td>{{each.retained_earning}}</td>
                             </tr>
                             {% endfor %}
+
+                            <tr>
+                                <td>คู่แรก</td>
+                                <td>{{first_year_status}}</td>
+                            </tr>
+                            <tr>
+                                <td>คู่สอง</td>
+                                <td>{{second_year_status}}</td>
+                            </tr>
 
                     </tbody>
                 </table>
