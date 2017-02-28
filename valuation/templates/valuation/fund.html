@@ -136,13 +136,15 @@
                                 {% endif %}
                             </tr>
 
+                            <!-- retained earning debug -->
+                            <!--
                             {% for each in retained %}
                             <tr>
                                 <td>{{each.period}}</td>
                                 <td>{{each.retained_earning}}</td>
                             </tr>
                             {% endfor %}
-
+                            -->
                             <tr>
                                 <td>คู่แรก</td>
                                 <td>{{first_year_status}}</td>
@@ -150,6 +152,16 @@
                             <tr>
                                 <td>คู่สอง</td>
                                 <td>{{second_year_status}}</td>
+                            </tr>
+                            <tr>
+                                <td>กำไรสะสม</td>
+                                {% if retained_status == "Growth" or retained_status == "Consistent" %}
+                                    <td class="success">{{retained_status}}</td>
+                                {% elif retained_status == "Fluctuation" %}
+                                    <td class="warning">{{retained_status}}</td>
+                                {% else %}
+                                    <td class="danger">{{retained_status}}</td>
+                                {% endif %}
                             </tr>
 
                     </tbody>

@@ -128,6 +128,15 @@ def fund_view(request,name):
         elif abs(second_year_compare) < retained_data[2].retained_earning*10/100 or second_year_compare == 0:
             second_year_status = "Consistent"
 
+        #retained result
+        if first_year_status == "Growth" and second_year_status == "Growth":
+            retained_status = "Growth"
+        elif (first_year_status == "Growth" and second_year_status == "Declined") or (second_year_status == "Growth" and first_year_status == "Declined"):
+            retained_status = "Fluctuation"
+        elif first_year_status == "Declined" and second_year_status == "Declined":
+            retained_status = "Declined"
+        else:
+            retained_status = "Consistent"
 
     data = \
         DataPool(series=
@@ -172,7 +181,7 @@ def fund_view(request,name):
     return render(request,'valuation/fund.html',{'name': name, 'age':age, 'fund_data':fund_data,
                                                     'chart':value_chart, 
                                                     'payout_consistent':payout_consistent, 'retained':retained_data,
-                                                    'stability_status':stability_status,
+                                                    'stability_status':stability_status, 'retained_status':retained_status,
                                                     'first_year_status':first_year_status, 'second_year_status':second_year_status})
 
 def ranking_view(request,rank_type):
