@@ -103,29 +103,29 @@ def fund_view(request,name):
         payout_consistent = 'Zero payout detected in last year'
 
     #Retained Earning
-    retained_data = Financial_Statement.objects.filter(short_name = name).order_by('-period')
+    statement_data = Financial_Statement.objects.filter(short_name = name).order_by('-period')
     if age < 3:
         retained_status = "No data to compare"
     else:
-        first_year_compare = retained_data[0].retained_earning - retained_data[1].retained_earning
-        second_year_compare = retained_data[0].retained_earning - retained_data[2].retained_earning
+        first_year_compare = statement_data[0].retained_earning - statement_data[1].retained_earning
+        second_year_compare = statement_data[0].retained_earning - statement_data[2].retained_earning
 
         #first year status
-        if abs(first_year_compare) > retained_data[1].retained_earning*10/100:
+        if abs(first_year_compare) > statement_data[1].retained_earning*10/100:
             if first_year_compare > 0:
                 first_year_status = "Growth"
             else:
                 first_year_status = "Declined"
-        elif abs(first_year_compare) < retained_data[1].retained_earning*10/100 or first_year_compare == 0:
+        elif abs(first_year_compare) < statement_data[1].retained_earning*10/100 or first_year_compare == 0:
             first_year_status = "Consistent"
 
         #second year status
-        if abs(second_year_compare) > retained_data[2].retained_earning*10/100:
+        if abs(second_year_compare) > statement_data[2].retained_earning*10/100:
             if second_year_compare > 0:
                 second_year_status = "Growth"
             else:
                 second_year_status = "Declined"
-        elif abs(second_year_compare) < retained_data[2].retained_earning*10/100 or second_year_compare == 0:
+        elif abs(second_year_compare) < statement_data[2].retained_earning*10/100 or second_year_compare == 0:
             second_year_status = "Consistent"
 
         #retained result
@@ -137,6 +137,44 @@ def fund_view(request,name):
             retained_status = "Declined"
         else:
             retained_status = "Consistent"
+
+    #Rental Income
+    if age < 3:
+        rental_status = "No data to compare"
+    else:
+        first_year_compare = statement_data[0].rental_income - statement_data[1].rental_income
+        second_year_compare = statement_data[0].rental_income - statement_data[2].rental_income
+
+        #first year status
+        if abs(first_year_compare) > statement_data[1].rental_income*5/100:
+            if first_year_compare > 0:
+                first_year_status = "Growth"
+            else:
+                first_year_status = "Declined"
+        elif abs(first_year_compare) < statement_data[1].rental_income*5/100 or first_year_compare == 0:
+            first_year_status = "Consistent"
+
+        #second year status
+        if abs(second_year_compare) > statement_data[2].rental_income*5/100:
+            if second_year_compare > 0:
+                second_year_status = "Growth"
+            else:
+                second_year_status = "Declined"
+        elif abs(second_year_compare) < statement_data[2].rental_income*5/100 or second_year_compare == 0:
+            second_year_status = "Consistent"
+
+        #rental result
+        if first_year_status == "Growth" and second_year_status == "Growth":
+            rental_status = "Growth"
+        elif (first_year_status == "Growth" and second_year_status == "Declined") or (second_year_status == "Growth" and first_year_status == "Declined"):
+            rental_status = "Fluctuation"
+        elif (first_year_status == "Declined" and second_year_status == "Declined") or\
+            (first_year_status == "Declined" and second_year_status == "Consistent") or\
+            (first_year_status == "Consistent" and second_year_status == "Declined"):
+            rental_status = "Declined"
+        else:
+            rental_status = "Consistent"
+
 
     data = \
         DataPool(series=
@@ -180,9 +218,9 @@ def fund_view(request,name):
     
     return render(request,'valuation/fund.html',{'name': name, 'age':age, 'fund_data':fund_data,
                                                     'chart':value_chart, 
-                                                    'payout_consistent':payout_consistent, 'retained':retained_data,
+                                                    'payout_consistent':payout_consistent, 'statement':statement_data,
                                                     'stability_status':stability_status, 'retained_status':retained_status,
-                                                    'first_year_status':first_year_status, 'second_year_status':second_year_status})
+                                                    'rental_status':rental_status})
 
 def ranking_view(request,rank_type):
     #ranking by latest_yield

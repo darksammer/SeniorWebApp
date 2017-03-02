@@ -136,28 +136,32 @@
                                 {% endif %}
                             </tr>
 
-                            <!-- retained earning debug -->
+                            <!-- debug -->
                             <!--
-                            {% for each in retained %}
+                            {% for each in statement %}
                             <tr>
                                 <td>{{each.period}}</td>
-                                <td>{{each.retained_earning}}</td>
+                                <td>{{each.rental_income}}</td>
                             </tr>
                             {% endfor %}
                             -->
+
                             <tr>
-                                <td>คู่แรก</td>
-                                <td>{{first_year_status}}</td>
+                                <td>รายได้ค่าเช่า</td>
+                                {% if rental_status == "Growth" or rental_status == "Consistent" %}
+                                    <td class="success">{{rental_status}}</td>
+                                {% elif rental_status == "Fluctuation" or rental_status == "No data to compare" %}
+                                    <td class="warning">{{rental_status}}</td>
+                                {% else %}
+                                    <td class="danger">{{rental_status}}</td>
+                                {% endif %}
                             </tr>
-                            <tr>
-                                <td>คู่สอง</td>
-                                <td>{{second_year_status}}</td>
-                            </tr>
+
                             <tr>
                                 <td>กำไรสะสม</td>
                                 {% if retained_status == "Growth" or retained_status == "Consistent" %}
                                     <td class="success">{{retained_status}}</td>
-                                {% elif retained_status == "Fluctuation" %}
+                                {% elif retained_status == "Fluctuation" or retained_status == "No data to compare" %}
                                     <td class="warning">{{retained_status}}</td>
                                 {% else %}
                                     <td class="danger">{{retained_status}}</td>
