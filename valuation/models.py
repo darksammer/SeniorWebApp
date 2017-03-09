@@ -121,7 +121,7 @@ class Dividend_Yield(models.Model):
 
 class Dividend_Payout(models.Model):
     short_name = models.ForeignKey(General_Information, on_delete=models.CASCADE)
-    period = models.DateField(auto_now=False, auto_now_add=False)
+    period = models.DateField(auto_now=False, auto_now_add=False, unique=True)
     div_per_share = models.DecimalField(max_digits=8, decimal_places=5)
 
     #rename object when call via API
@@ -151,8 +151,8 @@ class Financial_Ratio(models.Model):
         return self.short_name_id
 
 class Fair_Value(models.Model):
-    short_name = models.ForeignKey(General_Information, on_delete=models.CASCADE)
-    period = models.DateField(auto_now=False, auto_now_add=False)
+    short_name = models.ForeignKey(General_Information, related_name='short_name_fk', on_delete=models.CASCADE)
+    period = models.ForeignKey(Dividend_Payout, related_name='period_fk', on_delete=models.CASCADE)
     price = models.DecimalField(max_digits=8, decimal_places=2, null=True)
     fair = models.DecimalField(max_digits=8, decimal_places=2, null=True)
 
