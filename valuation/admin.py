@@ -11,10 +11,14 @@ class YieldAdmin(admin.ModelAdmin):
     search_fields = ['short_name']
     list_display = ('short_name', 'period', 'div_yield')
 
+class FairInLine(admin.TabularInline):
+    model = Fair_Value
+
 #Admin class for Dividend_Payout
 class PayoutAdmin(admin.ModelAdmin):
     search_fields = ['short_name']
     list_display = ('short_name', 'period', 'div_per_share')
+    #inlines = [FairInLine]
 
 #Admin class for Financial_Statement
 class StatementAdmin(admin.ModelAdmin):
@@ -30,6 +34,7 @@ class RatioAdmin(admin.ModelAdmin):
 class FairAdmin(admin.ModelAdmin):
     search_fields = ['short_name']
     list_display = ('short_name', 'period', 'price', 'fair')
+    #readonly_fields = ('fair',)
 
 # Register your models here.
 admin.site.register(General_Information, GeneralAdmin)

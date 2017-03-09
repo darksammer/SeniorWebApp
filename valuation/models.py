@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models import F
 from django.http import Http404
 from decimal import Decimal
+from django.utils import timezone
 
 #fixed dropdown for period input
 Period_Choice = (
