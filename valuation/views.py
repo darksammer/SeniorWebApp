@@ -1,6 +1,6 @@
 from django.shortcuts import render,render_to_response, redirect
 from django.http import Http404
-from django.db.models import F
+from django.db.models import F,Prefetch
 from django.utils import timezone
 from chartit import DataPool, Chart
 from .models import *
@@ -84,15 +84,23 @@ def fund_view(request,name):
     stability1 = Dividend_Yield.objects.get_stability1(fund_name = name)
     stability2 = Dividend_Yield.objects.get_stability2(fund_name = name)
 
-    if (stability1 >= -1 and stability1 <= 2) and (stability2 >= -1 and stability2 <= 2):
-        stability_status = "Consistent"
-    elif stability1 < -1 or stability2 < -1:
-        stability_status = "Declined"
-    else:
-        stability_status = "Growth"
+    try:
+        if (stability1 >= -1 and stability1 <= 2) and (stability2 >= -1 and stability2 <= 2):
+            stability_status = "Consistent"
+        elif stability1 < -1 or stability2 < -1:
+            stability_status = "Declined"
+        else:
+            stability_status = "Growth"
+    except:
+        stability_status = "Unavailable"
 
     #detect payout consistent
-    historical_yield = Dividend_Yield.objects.filter(short_name = name).filter(period__year = current_year-1)
+    historical_yield = Dividend_Yield.objects.prefetch_related(
+                                Prefetch(
+                                    "period",
+                                    queryset = Period_Table.objects.filter(period__year = current_year-1)
+                                )
+                            ).filter(short_name = name)
     dividend_status =  len(historical_yield) / fund_data.dividend_payout_amount_per_year
 
     if dividend_status == 1:
@@ -179,7 +187,7 @@ def fund_view(request,name):
     data = \
         DataPool(series=
             [{'options': {
-                'source': Fair_Value.objects.filter(short_name = name)},
+                'source': Fair_Value.objects.filter(short_name = name).select_related()},
                 'terms': [
                     'period','price','fair','short_name']}
             ])
