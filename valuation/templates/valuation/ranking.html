@@ -42,15 +42,7 @@
                 <ul class="nav navbar-nav page-header">
                     <li><a href="{% url "index" %}">หน้าแรก</a></li>
                     <li><a href="a">ราคาซื้อขาย</a></li>
-                    <!-- Sub menu -->
-                    <li class="dropdown-submenu">
-                        <a class="ranking">อันดับกองทุน <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{% url "ranking" rank_type="yield" %}">Dividend Yield</a></li>
-                            <li><a href="{% url "ranking" rank_type="fair" %}">Price & Fair</a></li>
-                        </ul>
-                    </li>
-                    
+                    <li><a href="{% url "ranking" rank_type="yield" %}">อันดับกองทุน</a></li>
                     <li><a href="#">ข่าวสาร</a></li>
                     <li><a href="#">ส่วนให้ความรู้</a></li>
                     <li><a href="#">บทความการลงทุน</a></li>
@@ -73,27 +65,15 @@
                         {% endif %}
                     </tr>
                 </thead>
-                <!-- yield rank -->
-                {% if rank_type == 'yield' %}
-                    {% for each in fund_list %}
-                        <tr>
-                            <td>{{ forloop.counter }}</td>
-                            <td><a href="{% url "fund" name=each.short_name %}"> {{ each.short_name | upper }}</a></td>
-                            <td>{{ each.full_name }}</td>
-                            <td>{{ each.div_yield }}%</td>
-                        </tr>
-                    {% endfor %}
-                <!-- fair rank -->
-                {% elif rank_type == 'fair' %}
-                    {% for each in fund_list %}
-                        <tr>
-                            <td>{{ forloop.counter }}</td>
-                            <td><a href="{% url "fund" name=each.short_name %}"> {{ each.short_name | upper }}</a></td>
-                            <td>{{ each.full_name }}</td>
-                            <td>{{ each.diff }}</td>
-                        </tr>
-                    {% endfor %}
-                {% endif %}
+                <!-- rank -->
+                {% for each in fund_list %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td><a href="{% url "fund" name=each.short_name %}"> {{ each.short_name | upper }}</a></td>
+                        <td>{{ each.full_name }}</td>
+                        <td>{{ each.div_yield }}%</td>
+                    </tr>
+                {% endfor %}
 
             </table>
         </div>

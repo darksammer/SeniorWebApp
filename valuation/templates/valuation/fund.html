@@ -46,17 +46,8 @@
             <div class="col-md-offset-3">
                 <ul class="nav navbar-nav page-header">
                     <li><a href="{% url "index" %}">หน้าแรก</a></li>
-                    <li><a href="#">ราคาซื้อขาย</a></li>
-
-                    <!-- Sub menu -->
-                    <li class="dropdown-submenu">
-                        <a class="ranking">อันดับกองทุน <span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="{% url "ranking" rank_type="yield" %}">Dividend Yield</a></li>
-                            <li><a href="{% url "ranking" rank_type="fair" %}">Price & Fair</a></li>
-                        </ul>
-                    </li>
-
+                    <li><a href="a">ราคาซื้อขาย</a></li>
+                    <li><a href="{% url "ranking" rank_type="yield" %}">อันดับกองทุน</a></li>
                     <li><a href="#">ข่าวสาร</a></li>
                     <li><a href="#">ส่วนให้ความรู้</a></li>
                     <li><a href="#">บทความการลงทุน</a></li>
