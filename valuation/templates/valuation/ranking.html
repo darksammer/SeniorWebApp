@@ -51,31 +51,34 @@
         </div>
 
         <!-- Ranking Table -->
-        <div class="col-md-offset-3 col-md-5">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th>อันดับ</th>
-                        <th>ชื่อย่อ</th>
-                        <th>ชื่อกอง</th>
-                        {% if rank_type == 'yield' %}
-                            <th>เงินปันผลตอบแทน</th>
-                        {% elif rank_type == 'fair' %}
-                            <th>ส่วนต่างราคากับมูลค่าแท้จริง</th>
-                        {% endif %}
-                    </tr>
-                </thead>
-                <!-- rank -->
-                {% for each in fund_list %}
-                    <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td><a href="{% url "fund" name=each.short_name %}"> {{ each.short_name | upper }}</a></td>
-                        <td>{{ each.full_name }}</td>
-                        <td>{{ each.div_yield }}%</td>
-                    </tr>
-                {% endfor %}
-
-            </table>
+        <div class="container-fluid">
+        <div class="col-lg-offset-3 col-lg-5 col-md-offset-3 col-md-5">
+            <div class="container-fluid">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>อันดับ</th>
+                            <th>ชื่อย่อ</th>
+                            <th>ชื่อกอง</th>
+                            {% if rank_type == 'yield' %}
+                                <th>เงินปันผลตอบแทน</th>
+                            {% elif rank_type == 'fair' %}
+                                <th>ส่วนต่างราคากับมูลค่าแท้จริง</th>
+                            {% endif %}
+                        </tr>
+                    </thead>
+                    <!-- rank -->
+                    {% for each in fund_list %}
+                        <tr>
+                            <td>{{ forloop.counter }}</td>
+                            <td><a href="{% url "fund" name=each.short_name %}"> {{ each.short_name | upper }}</a></td>
+                            <td>{{ each.full_name }}</td>
+                            <td>{{ each.div_yield }}%</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        </div>
         </div>
         <!-- script for menu dropdown -->
         <script>

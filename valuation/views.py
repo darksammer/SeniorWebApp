@@ -7,12 +7,16 @@ from .models import *
 
 # Create your views here.
 def index_view(request):
-    fund_list = Dividend_Yield.objects.prefetch_related(
-                                Prefetch(
-                                    "period",
-                                    queryset = Period_Table.objects.all()
-                                )
-                            ).order_by('-div_yield','-period')[:5]
+    fund_list = Dividend_Yield.objects.raw('select valuation_dividend_yield.id, valuation_dividend_yield.period_id, valuation_dividend_yield.div_yield,\
+                                                valuation_dividend_yield.short_name_id\
+                                                from valuation_dividend_yield\
+                                                where valuation_dividend_yield.id in (\
+                                                                    select max(valuation_dividend_yield.id)\
+                                                                    from valuation_dividend_yield\
+                                                                    group by valuation_dividend_yield.short_name_id\
+                                                                )\
+                                                order by valuation_dividend_yield.div_yield DESC\
+                                                limit 5')
 
     # fund_list = Dividend_Yield.objects.raw('select valuation_dividend_yield.id, max(valuation_dividend_yield.period) as period, valuation_dividend_yield.div_yield,\
     #                                             valuation_dividend_yield.short_name_id , valuation_general_information.full_name from valuation_dividend_yield\
@@ -21,12 +25,15 @@ def index_view(request):
     #                                             order by div_yield DESC, period DESC\
     #                                             limit 5')
     
-    best_fund = Fair_Value.objects.prefetch_related(
-                                Prefetch(
-                                    "period",
-                                    queryset = Period_Table.objects.all()
-                                )
-                            )
+    best_fund = Dividend_Yield.objects.raw('select valuation_fair_value.id, valuation_fair_value.period_id,\
+                                            valuation_fair_value.short_name_id, valuation_fair_value.fair,\
+                                            valuation_fair_value.price\
+                                            from valuation_fair_value\
+                                            inner join (select valuation_dividend_yield.short_name_id\
+                                                            from valuation_dividend_yield\
+                                                            order by valuation_dividend_yield.period_id desc, valuation_dividend_yield.div_yield desc\
+                                                            limit 1) as highest_yield\
+                                            on valuation_fair_value.short_name_id = highest_yield.short_name_id')
 
     # best_fund = Fair_Value.objects.raw('select id, short_name_id, period, price, fair\
     #                                                 from valuation_fair_value\
@@ -39,7 +46,7 @@ def index_view(request):
             [{'options': {
                 'source': best_fund},
                 'terms': [
-                    'period','price','fair','short_name_id']}
+                    'period_id','price','fair','short_name_id']}
             ])
 
     index_chart = Chart(
@@ -52,7 +59,7 @@ def index_view(request):
                 'color': '#5b9aff',
                 },
             'terms':{
-                'period':['price'],
+                'period_id':['price'],
                 }},
          {'options':{
                 'type': 'line',
@@ -60,7 +67,7 @@ def index_view(request):
                 'dashStyle' : 'longdash',
                 'color': '#000000'},
             'terms':{
-                'period':['fair']
+                'period_id':['fair']
          }}],
         chart_options =
          {'title': {
@@ -256,5 +263,5 @@ def ranking_view(request,rank_type):
                                                                     from valuation_dividend_yield\
                                                                     group by valuation_dividend_yield.short_name_id\
                                                                 )\
-                                                order by valuation_dividend_yield.period_id DESC')
+                                                order by valuation_dividend_yield.div_yield DESC')
         return render(request, 'valuation/ranking.html' , {'fund_list':fund_list, 'rank_type':rank_type})
