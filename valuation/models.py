@@ -3,6 +3,7 @@ from django.db.models import F
 from django.http import Http404
 from decimal import Decimal
 from django.utils import timezone
+import decimal
 
 #fixed dropdown for period input
 Period_Choice = (
@@ -157,10 +158,21 @@ class Financial_Ratio(models.Model):
         return self.short_name_id
 
 class Fair_Value(models.Model):
+
     short_name = models.ForeignKey(General_Information, related_name='short_name_fk', on_delete=models.CASCADE)
     period = models.ForeignKey(Period_Table)
     price = models.DecimalField(max_digits=8, decimal_places=2, null=True)
-    fair = models.DecimalField(max_digits=8, decimal_places=2, null=True)
+    fair = models.DecimalField(max_digits=8, decimal_places=2, null=True, editable=False)
+
+    def save(self, *args, **kwargs):
+        current_payout = Dividend_Payout.objects.filter(short_name=self.short_name, period=self.period)
+        payout_amount = General_Information.objects.filter(short_name=self.short_name)
+        discount_rate = 0.07
+        # fair = payout * payout amount / discount rate
+        for each in current_payout:
+            for each2 in payout_amount:
+                self.fair = each.div_per_share * each2.dividend_payout_amount_per_year / decimal.Decimal(discount_rate)
+        super(Fair_Value, self).save(*args, **kwargs)
 
     #rename object when call via API
     def __str__(self):

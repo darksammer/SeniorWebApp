@@ -265,3 +265,9 @@ def ranking_view(request,rank_type):
                                                                 )\
                                                 order by valuation_dividend_yield.div_yield DESC')
         return render(request, 'valuation/ranking.html' , {'fund_list':fund_list, 'rank_type':rank_type})
+
+def test_page(request):
+    current_payout = Dividend_Payout.objects.filter(short_name='test', period='2017-03-01')
+    payout_amount = General_Information.objects.filter(short_name='test')
+
+    return render(request, 'valuation/test_page.html' , {'current_payout':current_payout, 'payout_amount':payout_amount})

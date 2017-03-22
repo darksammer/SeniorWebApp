@@ -1,0 +1,9 @@
+{{current_payout}}<br>
+{% for each in current_payout %}
+    {{each.div_per_share}}<br>
+{% endfor %}
+
+{{payout_amount}}<br>
+{% for each in payout_amount %}
+    {{each.dividend_payout_amount_per_year}}<br>
+{% endfor %}
