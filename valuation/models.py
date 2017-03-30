@@ -163,15 +163,45 @@ class Fair_Value(models.Model):
     period = models.ForeignKey(Period_Table)
     price = models.DecimalField(max_digits=8, decimal_places=2, null=True)
     fair = models.DecimalField(max_digits=8, decimal_places=2, null=True, editable=False)
+    yield_status = models.CharField(max_length=50, editable=False, null=True)
+    payout_status = models.CharField(max_length=50, editable=False, null=True)
+    rental_status = models.CharField(max_length=50, editable=False, null=True)
+    retained_status = models.CharField(max_length=50, editable=False, null=True)
+
 
     def save(self, *args, **kwargs):
+        #Fair calculation
         current_payout = Dividend_Payout.objects.filter(short_name=self.short_name, period=self.period)
         payout_amount = General_Information.objects.filter(short_name=self.short_name)
         discount_rate = 0.07
-        # fair = payout * payout amount / discount rate
+            # fair = payout * payout amount / discount rate
         for each in current_payout:
             for each2 in payout_amount:
                 self.fair = each.div_per_share * each2.dividend_payout_amount_per_year / decimal.Decimal(discount_rate)
+
+        #Fair adjustment
+        fund_data = General_Information.objects.get(short_name = self.short_name)
+        chart_data = Fair_Value.objects.filter(short_name = self.short_name).select_related().order_by('-period')
+
+        current_year = timezone.now().year
+
+        #fund age
+        age = current_year - fund_data.ipo_date
+
+        #get dividend stability
+        stability1 = Dividend_Yield.objects.get_stability1(fund_name = self.short_name)
+        stability2 = Dividend_Yield.objects.get_stability2(fund_name = self.short_name)
+        try:
+            if (stability1 >= -1 and stability1 <= 2) and (stability2 >= -1 and stability2 <= 2):
+                stability_status = "Consistent"
+            elif stability1 < -1 or stability2 < -1:
+                stability_status = "Declined"
+            else:
+                stability_status = "Growth"
+        except:
+            stability_status = "Unavailable"
+
+
         super(Fair_Value, self).save(*args, **kwargs)
 
     #rename object when call via API

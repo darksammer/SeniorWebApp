@@ -4,6 +4,7 @@ from django.db.models import F, Prefetch, Max
 from django.utils import timezone
 from chartit import DataPool, Chart
 from .models import *
+import decimal
 
 # Create your views here.
 def index_view(request):
@@ -93,6 +94,7 @@ def fund_view(request,name):
 
     try:
         fund_data = General_Information.objects.get(short_name = name)
+        chart_data = Fair_Value.objects.filter(short_name = name).select_related().order_by('-period')
     except:
         raise Http404('Fund not found')
     
@@ -204,11 +206,10 @@ def fund_view(request,name):
         else:
             rental_status = "Consistent"
 
-
     data = \
         DataPool(series=
             [{'options': {
-                'source': Fair_Value.objects.filter(short_name = name).select_related()},
+                'source': chart_data},
                 'terms': [
                     'period','price','fair','short_name']}
             ])
@@ -267,7 +268,9 @@ def ranking_view(request,rank_type):
         return render(request, 'valuation/ranking.html' , {'fund_list':fund_list, 'rank_type':rank_type})
 
 def test_page(request):
-    current_payout = Dividend_Payout.objects.filter(short_name='test', period='2017-03-01')
-    payout_amount = General_Information.objects.filter(short_name='test')
+    chart_data = list(Fair_Value.objects.filter(short_name = 'test').select_related().order_by('-period'))
+    first = chart_data[0].fair
+    first = first - (first*decimal.Decimal(0.05))
+    chart_data[0].fair = first
 
-    return render(request, 'valuation/test_page.html' , {'current_payout':current_payout, 'payout_amount':payout_amount})
+    return render(request, 'valuation/test_page.html' , {'first':first, 'chart_data':chart_data})
