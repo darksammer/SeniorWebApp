@@ -33,7 +33,7 @@ class RatioAdmin(admin.ModelAdmin):
 #Admin class for Fair_Value
 class FairAdmin(admin.ModelAdmin):
     search_fields = ['short_name']
-    list_display = ('short_name', 'period', 'price', 'fair')
+    list_display = ('short_name', 'period', 'price', 'fair', 'yield_status', 'payout_status', 'rental_status', 'retained_status')
     #readonly_fields = ('fair',)
 
 # Register your models here.

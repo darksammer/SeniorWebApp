@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import F
+from django.db.models import F, Prefetch, Max
 from django.http import Http404
 from decimal import Decimal
 from django.utils import timezone
@@ -170,6 +170,127 @@ class Fair_Value(models.Model):
 
 
     def save(self, *args, **kwargs):
+        current_year = timezone.now().year
+
+        #fund age
+        age = current_year - fund_data.ipo_date
+
+        try:
+            #get dividend stability
+            stability1 = Dividend_Yield.objects.get_stability1(fund_name = self.short_name)
+            stability2 = Dividend_Yield.objects.get_stability2(fund_name = self.short_name)
+            if (stability1 >= -1 and stability1 <= 2) and (stability2 >= -1 and stability2 <= 2):
+                stability_status = "Consistent"
+            elif stability1 < -1 or stability2 < -1:
+                stability_status = "Declined"
+            else:
+                stability_status = "Growth"
+        except:
+            stability_status = "Unavailable"
+
+        #detect payout consistent
+        try:
+            historical_yield = Dividend_Yield.objects.prefetch_related(
+                                        Prefetch(
+                                            "period",
+                                            queryset = Period_Table.objects.filter(period__year = current_year-1)
+                                        )
+                                    ).filter(short_name = self.short_name)
+            dividend_status =  len(historical_yield) / fund_data.dividend_payout_amount_per_year
+        except:
+            raise ValueError('Fund name error')
+
+        if dividend_status == 1:
+            payout_consistent = 'Consistent'
+        elif dividend_status > 1:
+            payout_consistent = 'More than usual'
+        else:
+            payout_consistent = 'Zero payout detected in last year'
+
+        #get statement for retained and rental
+        try:
+            statement_data = Financial_Statement.objects.filter(short_name = self.short_name).order_by('-period')
+        except:
+            raise ValueError('Fund name error')
+
+        #Retained Earning
+        if age < 3:
+            retained_earning = "No data to compare"
+        else:
+            first_year_compare = statement_data[0].retained_earning - statement_data[1].retained_earning
+            second_year_compare = statement_data[0].retained_earning - statement_data[2].retained_earning
+
+            #first year status
+            if abs(first_year_compare) > statement_data[1].retained_earning*10/100:
+                if first_year_compare > 0:
+                    first_year_status = "Growth"
+                else:
+                    first_year_status = "Declined"
+            elif abs(first_year_compare) < statement_data[1].retained_earning*10/100 or first_year_compare == 0:
+                first_year_status = "Consistent"
+
+            #second year status
+            if abs(second_year_compare) > statement_data[2].retained_earning*10/100:
+                if second_year_compare > 0:
+                    second_year_status = "Growth"
+                else:
+                    second_year_status = "Declined"
+            elif abs(second_year_compare) < statement_data[2].retained_earning*10/100 or second_year_compare == 0:
+                second_year_status = "Consistent"
+
+            #retained result
+            if first_year_status == "Growth" and second_year_status == "Growth":
+                retained_earning = "Growth"
+            elif (first_year_status == "Growth" and second_year_status == "Declined") or (second_year_status == "Growth" and first_year_status == "Declined"):
+                retained_earning = "Fluctuation"
+            elif first_year_status == "Declined" and second_year_status == "Declined":
+                retained_earning = "Declined"
+            else:
+                retained_earning = "Consistent"
+
+        #Rental Income
+        if age < 3:
+            rental_income = "No data to compare"
+        else:
+            first_year_compare = statement_data[0].rental_income - statement_data[1].rental_income
+            second_year_compare = statement_data[0].rental_income - statement_data[2].rental_income
+
+            #first year status
+            if abs(first_year_compare) > statement_data[1].rental_income*5/100:
+                if first_year_compare > 0:
+                    first_year_status = "Growth"
+                else:
+                    first_year_status = "Declined"
+            elif abs(first_year_compare) < statement_data[1].rental_income*5/100 or first_year_compare == 0:
+                first_year_status = "Consistent"
+
+            #second year status
+            if abs(second_year_compare) > statement_data[2].rental_income*5/100:
+                if second_year_compare > 0:
+                    second_year_status = "Growth"
+                else:
+                    second_year_status = "Declined"
+            elif abs(second_year_compare) < statement_data[2].rental_income*5/100 or second_year_compare == 0:
+                second_year_status = "Consistent"
+
+            #rental result
+            if first_year_status == "Growth" and second_year_status == "Growth":
+                rental_income = "Growth"
+            elif (first_year_status == "Growth" and second_year_status == "Declined") or (second_year_status == "Growth" and first_year_status == "Declined"):
+                rental_income = "Fluctuation"
+            elif (first_year_status == "Declined" and second_year_status == "Declined") or\
+                (first_year_status == "Declined" and second_year_status == "Consistent") or\
+                (first_year_status == "Consistent" and second_year_status == "Declined"):
+                rental_income = "Declined"
+            else:
+                rental_income = "Consistent"
+
+        #update status field
+        self.yield_status = stability_status
+        self.payout_status = payout_consistent
+        self.rental_status = rental_income
+        self.retained_status = retained_earning
+
         #Fair calculation
         current_payout = Dividend_Payout.objects.filter(short_name=self.short_name, period=self.period)
         payout_amount = General_Information.objects.filter(short_name=self.short_name)
@@ -180,27 +301,11 @@ class Fair_Value(models.Model):
                 self.fair = each.div_per_share * each2.dividend_payout_amount_per_year / decimal.Decimal(discount_rate)
 
         #Fair adjustment
-        fund_data = General_Information.objects.get(short_name = self.short_name)
-        chart_data = Fair_Value.objects.filter(short_name = self.short_name).select_related().order_by('-period')
-
-        current_year = timezone.now().year
-
-        #fund age
-        age = current_year - fund_data.ipo_date
-
-        #get dividend stability
-        stability1 = Dividend_Yield.objects.get_stability1(fund_name = self.short_name)
-        stability2 = Dividend_Yield.objects.get_stability2(fund_name = self.short_name)
         try:
-            if (stability1 >= -1 and stability1 <= 2) and (stability2 >= -1 and stability2 <= 2):
-                stability_status = "Consistent"
-            elif stability1 < -1 or stability2 < -1:
-                stability_status = "Declined"
-            else:
-                stability_status = "Growth"
+            fund_data = General_Information.objects.get(short_name = self.short_name)
+            chart_data = Fair_Value.objects.filter(short_name = self.short_name).select_related().order_by('-period')
         except:
-            stability_status = "Unavailable"
-
+            raise ValueError('Fund name error')
 
         super(Fair_Value, self).save(*args, **kwargs)
 
