@@ -109,53 +109,43 @@
                         <!-- Dividend -->
                             <tr>
                                 <td>Dividend Yield</td>
-                                {% if stability_status == "Consistent" %}
-                                    <td class="success">{{stability_status}}</td>
-                                {% elif stability_status == "Declined" %}
-                                    <td class="danger">{{stability_status}}</td>
+                                {% if chart_data.0.yield_status == "Consistent" %}
+                                    <td class="success">{{chart_data.0.yield_status}}</td>
+                                {% elif chart_data.0.yield_status == "Declined" %}
+                                    <td class="danger">{{chart_data.0.yield_status}}</td>
                                 {% else %}
-                                    <td class="warning">{{stability_status}}</td>
+                                    <td class="warning">{{chart_data.0.yield_status}}</td>
                                 {% endif %}
                             </tr>
 
                             <tr>
                                 <td>จำนวนครั้งการจ่ายปันผล</td>
-                                {% if payout_consistent == "Consistent" or payout_consistent == "Growth" %}
-                                    <td class="success">{{payout_consistent}}</td>
+                                {% if chart_data.0.payout_status == "Consistent" or chart_data.0.payout_status == "Growth" %}
+                                    <td class="success">{{chart_data.0.payout_status}}</td>
                                 {% else %}
-                                    <td class="danger">{{payout_consistent}}</td>
+                                    <td class="danger">{{chart_data.0.payout_status}}</td>
                                 {% endif %}
                             </tr>
 
-                            <!-- debug -->
-                            <!--
-                            {% for each in statement %}
-                            <tr>
-                                <td>{{each.period}}</td>
-                                <td>{{each.rental_income}}</td>
-                            </tr>
-                            {% endfor %}
-                            -->
-
                             <tr>
                                 <td>รายได้ค่าเช่า</td>
-                                {% if rental_status == "Growth" or rental_status == "Consistent" %}
-                                    <td class="success">{{rental_status}}</td>
-                                {% elif rental_status == "Fluctuation" or rental_status == "No data to compare" %}
-                                    <td class="warning">{{rental_status}}</td>
+                                {% if chart_data.0.rental_status == "Growth" or chart_data.0.rental_status == "Consistent" %}
+                                    <td class="success">{{chart_data.0.rental_status}}</td>
+                                {% elif chart_data.0.rental_status == "Fluctuation" or chart_data.0.rental_status == "No data to compare" %}
+                                    <td class="warning">{{chart_data.0.rental_status}}</td>
                                 {% else %}
-                                    <td class="danger">{{rental_status}}</td>
+                                    <td class="danger">{{chart_data.0.rental_status}}</td>
                                 {% endif %}
                             </tr>
 
                             <tr>
                                 <td>กำไรสะสม</td>
-                                {% if retained_status == "Growth" or retained_status == "Consistent" %}
-                                    <td class="success">{{retained_status}}</td>
-                                {% elif retained_status == "Fluctuation" or retained_status == "No data to compare" %}
-                                    <td class="warning">{{retained_status}}</td>
+                                {% if chart_data.0.retained_status == "Growth" or chart_data.0.retained_status == "Consistent" %}
+                                    <td class="success">{{chart_data.0.retained_status}}</td>
+                                {% elif chart_data.0.retained_status == "Fluctuation" or chart_data.0.retained_status == "No data to compare" %}
+                                    <td class="warning">{{chart_data.0.retained_status}}</td>
                                 {% else %}
-                                    <td class="danger">{{retained_status}}</td>
+                                    <td class="danger">{{chart_data.0.retained_status}}</td>
                                 {% endif %}
                             </tr>
 

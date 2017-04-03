@@ -1,9 +1,9 @@
 from django.shortcuts import render,render_to_response, redirect
 from django.http import Http404
 from django.db.models import F, Prefetch, Max
-from django.utils import timezone
 from chartit import DataPool, Chart
 from .models import *
+from django.utils import timezone
 import decimal
 
 # Create your views here.
@@ -97,115 +97,11 @@ def fund_view(request,name):
         chart_data = Fair_Value.objects.filter(short_name = name).select_related().order_by('-period')
     except:
         raise Http404('Fund not found')
-    
-    current_year = timezone.now().year
 
     #fund age
-    age = current_year - fund_data.ipo_date
+    age = timezone.now().year - fund_data.ipo_date
 
-    #get dividend stability
-    stability1 = Dividend_Yield.objects.get_stability1(fund_name = name)
-    stability2 = Dividend_Yield.objects.get_stability2(fund_name = name)
-
-    try:
-        if (stability1 >= -1 and stability1 <= 2) and (stability2 >= -1 and stability2 <= 2):
-            stability_status = "Consistent"
-        elif stability1 < -1 or stability2 < -1:
-            stability_status = "Declined"
-        else:
-            stability_status = "Growth"
-    except:
-        stability_status = "Unavailable"
-
-    #detect payout consistent
-    historical_yield = Dividend_Yield.objects.prefetch_related(
-                                Prefetch(
-                                    "period",
-                                    queryset = Period_Table.objects.filter(period__year = current_year-1)
-                                )
-                            ).filter(short_name = name)
-    dividend_status =  len(historical_yield) / fund_data.dividend_payout_amount_per_year
-
-    if dividend_status == 1:
-        payout_consistent = 'Consistent'
-    elif dividend_status > 1:
-        payout_consistent = 'More than usual'
-    else:
-        payout_consistent = 'Zero payout detected in last year'
-
-    #Retained Earning
-    statement_data = Financial_Statement.objects.filter(short_name = name).order_by('-period')
-    if age < 3:
-        retained_status = "No data to compare"
-    else:
-        first_year_compare = statement_data[0].retained_earning - statement_data[1].retained_earning
-        second_year_compare = statement_data[0].retained_earning - statement_data[2].retained_earning
-
-        #first year status
-        if abs(first_year_compare) > statement_data[1].retained_earning*10/100:
-            if first_year_compare > 0:
-                first_year_status = "Growth"
-            else:
-                first_year_status = "Declined"
-        elif abs(first_year_compare) < statement_data[1].retained_earning*10/100 or first_year_compare == 0:
-            first_year_status = "Consistent"
-
-        #second year status
-        if abs(second_year_compare) > statement_data[2].retained_earning*10/100:
-            if second_year_compare > 0:
-                second_year_status = "Growth"
-            else:
-                second_year_status = "Declined"
-        elif abs(second_year_compare) < statement_data[2].retained_earning*10/100 or second_year_compare == 0:
-            second_year_status = "Consistent"
-
-        #retained result
-        if first_year_status == "Growth" and second_year_status == "Growth":
-            retained_status = "Growth"
-        elif (first_year_status == "Growth" and second_year_status == "Declined") or (second_year_status == "Growth" and first_year_status == "Declined"):
-            retained_status = "Fluctuation"
-        elif first_year_status == "Declined" and second_year_status == "Declined":
-            retained_status = "Declined"
-        else:
-            retained_status = "Consistent"
-
-    #Rental Income
-    if age < 3:
-        rental_status = "No data to compare"
-    else:
-        first_year_compare = statement_data[0].rental_income - statement_data[1].rental_income
-        second_year_compare = statement_data[0].rental_income - statement_data[2].rental_income
-
-        #first year status
-        if abs(first_year_compare) > statement_data[1].rental_income*5/100:
-            if first_year_compare > 0:
-                first_year_status = "Growth"
-            else:
-                first_year_status = "Declined"
-        elif abs(first_year_compare) < statement_data[1].rental_income*5/100 or first_year_compare == 0:
-            first_year_status = "Consistent"
-
-        #second year status
-        if abs(second_year_compare) > statement_data[2].rental_income*5/100:
-            if second_year_compare > 0:
-                second_year_status = "Growth"
-            else:
-                second_year_status = "Declined"
-        elif abs(second_year_compare) < statement_data[2].rental_income*5/100 or second_year_compare == 0:
-            second_year_status = "Consistent"
-
-        #rental result
-        if first_year_status == "Growth" and second_year_status == "Growth":
-            rental_status = "Growth"
-        elif (first_year_status == "Growth" and second_year_status == "Declined") or (second_year_status == "Growth" and first_year_status == "Declined"):
-            rental_status = "Fluctuation"
-        elif (first_year_status == "Declined" and second_year_status == "Declined") or\
-            (first_year_status == "Declined" and second_year_status == "Consistent") or\
-            (first_year_status == "Consistent" and second_year_status == "Declined"):
-            rental_status = "Declined"
-        else:
-            rental_status = "Consistent"
-
+    #chart parameter
     data = \
         DataPool(series=
             [{'options': {
@@ -247,10 +143,7 @@ def fund_view(request,name):
 
     
     return render(request,'valuation/fund.html',{'name': name, 'age':age, 'fund_data':fund_data,
-                                                    'chart':value_chart, 
-                                                    'payout_consistent':payout_consistent, 'statement':statement_data,
-                                                    'stability_status':stability_status, 'retained_status':retained_status,
-                                                    'rental_status':rental_status})
+                                                    'chart':value_chart, 'chart_data':chart_data, 'age':age})
 
 def ranking_view(request,rank_type):
     #ranking by latest_yield
@@ -268,9 +161,5 @@ def ranking_view(request,rank_type):
         return render(request, 'valuation/ranking.html' , {'fund_list':fund_list, 'rank_type':rank_type})
 
 def test_page(request):
-    chart_data = list(Fair_Value.objects.filter(short_name = 'test').select_related().order_by('-period'))
-    first = chart_data[0].fair
-    first = first - (first*decimal.Decimal(0.05))
-    chart_data[0].fair = first
-
-    return render(request, 'valuation/test_page.html' , {'first':first, 'chart_data':chart_data})
+    chart_data = Fair_Value.objects.filter(short_name = 'test').select_related().order_by('-period')
+    return render(request, 'valuation/test_page.html' , {'chart_data':chart_data})
