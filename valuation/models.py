@@ -163,6 +163,7 @@ class Fair_Value(models.Model):
     period = models.ForeignKey(Period_Table)
     price = models.DecimalField(max_digits=8, decimal_places=2, null=True)
     fair = models.DecimalField(max_digits=8, decimal_places=2, null=True, editable=False)
+    ddm_fair = models.DecimalField(max_digits=8, decimal_places=2, null=True, editable=False)
     yield_status = models.CharField(max_length=50, editable=False, null=True)
     payout_status = models.CharField(max_length=50, editable=False, null=True)
     rental_status = models.CharField(max_length=50, editable=False, null=True)
@@ -172,8 +173,17 @@ class Fair_Value(models.Model):
     def save(self, *args, **kwargs):
         current_year = timezone.now().year
 
+        try:
+            fund_data = General_Information.objects.get(short_name = self.short_name)
+            chart_data = Fair_Value.objects.filter(short_name = self.short_name).select_related().order_by('-period')
+        except:
+            raise ValueError('Fund name error')
+
         #fund age
         age = current_year - fund_data.ipo_date
+
+        #negative factor count
+        negative_counter = 0
 
         try:
             #get dividend stability
@@ -183,6 +193,7 @@ class Fair_Value(models.Model):
                 stability_status = "Consistent"
             elif stability1 < -1 or stability2 < -1:
                 stability_status = "Declined"
+                negative_counter += 1
             else:
                 stability_status = "Growth"
         except:
@@ -206,6 +217,7 @@ class Fair_Value(models.Model):
             payout_consistent = 'More than usual'
         else:
             payout_consistent = 'Zero payout detected in last year'
+            negative_counter += 1
 
         #get statement for retained and rental
         try:
@@ -243,8 +255,10 @@ class Fair_Value(models.Model):
                 retained_earning = "Growth"
             elif (first_year_status == "Growth" and second_year_status == "Declined") or (second_year_status == "Growth" and first_year_status == "Declined"):
                 retained_earning = "Fluctuation"
+                negative_counter += 1
             elif first_year_status == "Declined" and second_year_status == "Declined":
                 retained_earning = "Declined"
+                negative_counter += 1
             else:
                 retained_earning = "Consistent"
 
@@ -256,9 +270,12 @@ class Fair_Value(models.Model):
             second_year_compare = statement_data[0].rental_income - statement_data[2].rental_income
 
             #first year status
+            #more than 5%
             if abs(first_year_compare) > statement_data[1].rental_income*5/100:
+                #5% positive
                 if first_year_compare > 0:
                     first_year_status = "Growth"
+                #5% negative
                 else:
                     first_year_status = "Declined"
             elif abs(first_year_compare) < statement_data[1].rental_income*5/100 or first_year_compare == 0:
@@ -266,8 +283,10 @@ class Fair_Value(models.Model):
 
             #second year status
             if abs(second_year_compare) > statement_data[2].rental_income*5/100:
+                #5% positive
                 if second_year_compare > 0:
                     second_year_status = "Growth"
+                #5% negative
                 else:
                     second_year_status = "Declined"
             elif abs(second_year_compare) < statement_data[2].rental_income*5/100 or second_year_compare == 0:
@@ -278,10 +297,12 @@ class Fair_Value(models.Model):
                 rental_income = "Growth"
             elif (first_year_status == "Growth" and second_year_status == "Declined") or (second_year_status == "Growth" and first_year_status == "Declined"):
                 rental_income = "Fluctuation"
+                negative_counter += 1
             elif (first_year_status == "Declined" and second_year_status == "Declined") or\
                 (first_year_status == "Declined" and second_year_status == "Consistent") or\
                 (first_year_status == "Consistent" and second_year_status == "Declined"):
                 rental_income = "Declined"
+                negative_counter += 1
             else:
                 rental_income = "Consistent"
 
@@ -295,17 +316,14 @@ class Fair_Value(models.Model):
         current_payout = Dividend_Payout.objects.filter(short_name=self.short_name, period=self.period)
         payout_amount = General_Information.objects.filter(short_name=self.short_name)
         discount_rate = 0.07
+        negative_adj_rate = 0.05
             # fair = payout * payout amount / discount rate
         for each in current_payout:
             for each2 in payout_amount:
-                self.fair = each.div_per_share * each2.dividend_payout_amount_per_year / decimal.Decimal(discount_rate)
-
-        #Fair adjustment
-        try:
-            fund_data = General_Information.objects.get(short_name = self.short_name)
-            chart_data = Fair_Value.objects.filter(short_name = self.short_name).select_related().order_by('-period')
-        except:
-            raise ValueError('Fund name error')
+                first_stage_fair = each.div_per_share * each2.dividend_payout_amount_per_year / decimal.Decimal(discount_rate)
+                final_fair = first_stage_fair - (negative_counter * (first_stage_fair * decimal.Decimal(negative_adj_rate))) 
+                self.ddm_fair = first_stage_fair
+                self.fair = final_fair
 
         super(Fair_Value, self).save(*args, **kwargs)
 
