@@ -1,5 +1,3 @@
-virtualenv
-gunicorn
 django
 django_chartit
 pymysql
