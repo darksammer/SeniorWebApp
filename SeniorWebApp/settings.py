@@ -78,10 +78,10 @@ WSGI_APPLICATION = 'SeniorWebApp.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'senior_project',
-        'USER': 'project01',
-        'PASSWORD': 'project01',
-        'HOST': '127.0.0.1',
+        'NAME': 'db-77742c4e-bd22',
+        'USER': 'bc82193ee168ef',
+        'PASSWORD': 'f2d27dfd',
+        'HOST': 'ap-cdbr-azure-southeast-b.cloudapp.net',
         'PORT': '3306',
     }
 }
