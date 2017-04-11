@@ -25,7 +25,7 @@ SECRET_KEY = '860e=pvgczc=&7&xs7jvub(ug$3jin_d)n2_ivvt_7n*)s4=hn'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['pfcoreseniorproject.azurewebsites.net']
 
 
 # Application definition
