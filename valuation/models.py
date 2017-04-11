@@ -47,7 +47,7 @@ class General_Information(models.Model):
     property_type = models.CharField(max_length=50)
     ipo_date = models.IntegerField()
     dividend_payout_amount_per_year = models.SmallIntegerField()
-    listed_share = models.DecimalField(max_digits=5, decimal_places=2, null=True)
+    listed_share = models.DecimalField(max_digits=7, decimal_places=2, null=True)
 
     #rename object when call via API
     def __str__(self):
