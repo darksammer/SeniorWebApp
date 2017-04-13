@@ -330,3 +330,10 @@ class Fair_Value(models.Model):
     #rename object when call via API
     def __str__(self):
         return self.short_name_id
+
+#----------------- News DB -----------------
+class FeedNews(models.Model):
+    short_name = models.ForeignKey(General_Information, on_delete=models.CASCADE)
+    date = models.DateField(auto_now=False, auto_now_add=False)
+    title = models.CharField(max_length=200)
+    link = models.CharField(max_length=200)
