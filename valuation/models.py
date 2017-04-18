@@ -171,6 +171,7 @@ class Fair_Value(models.Model):
 
 
     def save(self, *args, **kwargs):
+
         current_year = timezone.now().year
 
         try:
