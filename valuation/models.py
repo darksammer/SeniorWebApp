@@ -152,6 +152,8 @@ class Financial_Ratio(models.Model):
     period = models.ForeignKey(Period_Table)
     quarter = models.CharField(max_length = 2, choices = Quarter_Choice, null=True)
     eps = models.DecimalField(max_digits=5, decimal_places=2, null=True)
+    pbv = models.DecimalField(max_digits=5, decimal_places=2, null=True)
+    bvps = models.DecimalField(max_digits=5, decimal_places=2, null=True)
 
     #rename object when call via API
     def __str__(self):
