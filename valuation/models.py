@@ -119,12 +119,12 @@ class YieldManager(models.Manager):
 class Dividend_Yield(models.Model):
     short_name = models.ForeignKey(General_Information, on_delete=models.CASCADE)
     period = models.ForeignKey(Period_Table)
-    div_yield = models.DecimalField(max_digits=5, decimal_places=2)
+    div_yield = models.DecimalField(max_digits=5, decimal_places=2, null=True)
     objects = YieldManager()
 
     #rename object when call via API
     def __str__(self):
-        return self.short_name_id
+        return str(self.period)
 
 class Dividend_Payout(models.Model):
     short_name = models.ForeignKey(General_Information, on_delete=models.CASCADE)
