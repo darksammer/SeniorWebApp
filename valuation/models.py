@@ -150,7 +150,6 @@ class Financial_Statement(models.Model):
 class Financial_Ratio(models.Model):
     short_name = models.ForeignKey(General_Information, on_delete=models.CASCADE)
     period = models.ForeignKey(Period_Table)
-    quarter = models.CharField(max_length = 2, choices = Quarter_Choice, null=True)
     eps = models.DecimalField(max_digits=5, decimal_places=2, null=True)
     pbv = models.DecimalField(max_digits=5, decimal_places=2, null=True)
     bvps = models.DecimalField(max_digits=5, decimal_places=2, null=True)
