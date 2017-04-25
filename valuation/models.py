@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models import F, Prefetch, Max
 from django.http import Http404
 from decimal import Decimal
+from datetime import datetime
 from django.utils import timezone
 import decimal
 
@@ -321,13 +322,13 @@ class Fair_Value(models.Model):
         self.retained_status = retained_earning
 
         #Fair calculation
-        current_payout = Dividend_Payout.objects.filter(short_name=self.short_name, period=self.period)
+        current_payout = Dividend_Payout.objects.filter(short_name=self.short_name, period=self.period).order_by('-period')
         payout_amount = General_Information.objects.filter(short_name=self.short_name)
         discount_rate = 0.07
         negative_adj_rate = 0.05
-            # fair = payout * payout amount / discount rate
+        # fair = payout * payout amount / discount rate
         for each in current_payout:
-            for each2 in payout_amount:
+            for each2 in payout_amount: 
                 first_stage_fair = each.div_per_share * each2.dividend_payout_amount_per_year / decimal.Decimal(discount_rate)
                 final_fair = first_stage_fair - (negative_counter * (first_stage_fair * decimal.Decimal(negative_adj_rate))) 
                 self.ddm_fair = first_stage_fair
