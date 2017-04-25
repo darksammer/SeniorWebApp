@@ -229,84 +229,90 @@ class Fair_Value(models.Model):
 
         #Retained Earning
         if age < 3:
-            retained_earning = "No data to compare"
+            retained_earning = "No data, IPO within 2 years"
         else:
-            first_year_compare = statement_data[0].retained_earning - statement_data[1].retained_earning
-            second_year_compare = statement_data[0].retained_earning - statement_data[2].retained_earning
+            try:
+                first_year_compare = statement_data[0].retained_earning - statement_data[1].retained_earning
+                second_year_compare = statement_data[0].retained_earning - statement_data[2].retained_earning
 
-            #first year status
-            if abs(first_year_compare) > statement_data[1].retained_earning*10/100:
-                if first_year_compare > 0:
-                    first_year_status = "Growth"
+                #first year status
+                if abs(first_year_compare) > statement_data[1].retained_earning*10/100:
+                    if first_year_compare > 0:
+                        first_year_status = "Growth"
+                    else:
+                        first_year_status = "Declined"
+                elif abs(first_year_compare) < statement_data[1].retained_earning*10/100 or first_year_compare == 0:
+                    first_year_status = "Consistent"
+
+                #second year status
+                if abs(second_year_compare) > statement_data[2].retained_earning*10/100:
+                    if second_year_compare > 0:
+                        second_year_status = "Growth"
+                    else:
+                        second_year_status = "Declined"
+                elif abs(second_year_compare) < statement_data[2].retained_earning*10/100 or second_year_compare == 0:
+                    second_year_status = "Consistent"
+
+                #retained result
+                if first_year_status == "Growth" and second_year_status == "Growth":
+                    retained_earning = "Growth"
+                elif (first_year_status == "Growth" and second_year_status == "Declined") or (second_year_status == "Growth" and first_year_status == "Declined"):
+                    retained_earning = "Fluctuation"
+                    negative_counter += 1
+                elif first_year_status == "Declined" and second_year_status == "Declined":
+                    retained_earning = "Declined"
+                    negative_counter += 1
                 else:
-                    first_year_status = "Declined"
-            elif abs(first_year_compare) < statement_data[1].retained_earning*10/100 or first_year_compare == 0:
-                first_year_status = "Consistent"
-
-            #second year status
-            if abs(second_year_compare) > statement_data[2].retained_earning*10/100:
-                if second_year_compare > 0:
-                    second_year_status = "Growth"
-                else:
-                    second_year_status = "Declined"
-            elif abs(second_year_compare) < statement_data[2].retained_earning*10/100 or second_year_compare == 0:
-                second_year_status = "Consistent"
-
-            #retained result
-            if first_year_status == "Growth" and second_year_status == "Growth":
-                retained_earning = "Growth"
-            elif (first_year_status == "Growth" and second_year_status == "Declined") or (second_year_status == "Growth" and first_year_status == "Declined"):
-                retained_earning = "Fluctuation"
-                negative_counter += 1
-            elif first_year_status == "Declined" and second_year_status == "Declined":
-                retained_earning = "Declined"
-                negative_counter += 1
-            else:
-                retained_earning = "Consistent"
+                    retained_earning = "Consistent"
+            except:
+                retained_earning = "Waiting 3rd year statement"
 
         #Rental Income
         if age < 3:
-            rental_income = "No data to compare"
+            rental_income = "No data, IPO within 2 years"
         else:
-            first_year_compare = statement_data[0].rental_income - statement_data[1].rental_income
-            second_year_compare = statement_data[0].rental_income - statement_data[2].rental_income
+            try:
+                first_year_compare = statement_data[0].rental_income - statement_data[1].rental_income
+                second_year_compare = statement_data[0].rental_income - statement_data[2].rental_income
 
-            #first year status
-            #more than 5%
-            if abs(first_year_compare) > statement_data[1].rental_income*5/100:
-                #5% positive
-                if first_year_compare > 0:
-                    first_year_status = "Growth"
-                #5% negative
+                #first year status
+                #more than 5%
+                if abs(first_year_compare) > statement_data[1].rental_income*5/100:
+                    #5% positive
+                    if first_year_compare > 0:
+                        first_year_status = "Growth"
+                    #5% negative
+                    else:
+                        first_year_status = "Declined"
+                elif abs(first_year_compare) < statement_data[1].rental_income*5/100 or first_year_compare == 0:
+                    first_year_status = "Consistent"
+
+                #second year status
+                if abs(second_year_compare) > statement_data[2].rental_income*5/100:
+                    #5% positive
+                    if second_year_compare > 0:
+                        second_year_status = "Growth"
+                    #5% negative
+                    else:
+                        second_year_status = "Declined"
+                elif abs(second_year_compare) < statement_data[2].rental_income*5/100 or second_year_compare == 0:
+                    second_year_status = "Consistent"
+
+                #rental result
+                if first_year_status == "Growth" and second_year_status == "Growth":
+                    rental_income = "Growth"
+                elif (first_year_status == "Growth" and second_year_status == "Declined") or (second_year_status == "Growth" and first_year_status == "Declined"):
+                    rental_income = "Fluctuation"
+                    negative_counter += 1
+                elif (first_year_status == "Declined" and second_year_status == "Declined") or\
+                    (first_year_status == "Declined" and second_year_status == "Consistent") or\
+                    (first_year_status == "Consistent" and second_year_status == "Declined"):
+                    rental_income = "Declined"
+                    negative_counter += 1
                 else:
-                    first_year_status = "Declined"
-            elif abs(first_year_compare) < statement_data[1].rental_income*5/100 or first_year_compare == 0:
-                first_year_status = "Consistent"
-
-            #second year status
-            if abs(second_year_compare) > statement_data[2].rental_income*5/100:
-                #5% positive
-                if second_year_compare > 0:
-                    second_year_status = "Growth"
-                #5% negative
-                else:
-                    second_year_status = "Declined"
-            elif abs(second_year_compare) < statement_data[2].rental_income*5/100 or second_year_compare == 0:
-                second_year_status = "Consistent"
-
-            #rental result
-            if first_year_status == "Growth" and second_year_status == "Growth":
-                rental_income = "Growth"
-            elif (first_year_status == "Growth" and second_year_status == "Declined") or (second_year_status == "Growth" and first_year_status == "Declined"):
-                rental_income = "Fluctuation"
-                negative_counter += 1
-            elif (first_year_status == "Declined" and second_year_status == "Declined") or\
-                (first_year_status == "Declined" and second_year_status == "Consistent") or\
-                (first_year_status == "Consistent" and second_year_status == "Declined"):
-                rental_income = "Declined"
-                negative_counter += 1
-            else:
-                rental_income = "Consistent"
+                    rental_income = "Consistent"
+            except:
+                rental_income = "Waiting 3rd year statement"
 
         #update status field
         self.yield_status = stability_status
