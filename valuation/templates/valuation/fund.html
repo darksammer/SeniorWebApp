@@ -131,7 +131,7 @@
                                 <td>รายได้ค่าเช่า</td>
                                 {% if chart_data.0.rental_status == "Growth" or chart_data.0.rental_status == "Consistent" %}
                                     <td class="success">{{chart_data.0.rental_status}}</td>
-                                {% elif chart_data.0.rental_status == "Fluctuation" or chart_data.0.rental_status == "No data to compare" %}
+                                {% elif chart_data.0.rental_status == "Fluctuation" or chart_data.0.rental_status == "Waiting 3rd year statement" or chart_data.0.rental_status == "No data, IPO within 2 years"%}
                                     <td class="warning">{{chart_data.0.rental_status}}</td>
                                 {% else %}
                                     <td class="danger">{{chart_data.0.rental_status}}</td>
@@ -142,7 +142,7 @@
                                 <td>กำไรสะสม</td>
                                 {% if chart_data.0.retained_status == "Growth" or chart_data.0.retained_status == "Consistent" %}
                                     <td class="success">{{chart_data.0.retained_status}}</td>
-                                {% elif chart_data.0.retained_status == "Fluctuation" or chart_data.0.retained_status == "No data to compare" %}
+                                {% elif chart_data.0.retained_status == "Fluctuation" or chart_data.0.retained_status == "Waiting 3rd year statement" or chart_data.0.retained_status == "No data, IPO within 2 years" %}
                                     <td class="warning">{{chart_data.0.retained_status}}</td>
                                 {% else %}
                                     <td class="danger">{{chart_data.0.retained_status}}</td>

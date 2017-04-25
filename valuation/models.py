@@ -265,7 +265,7 @@ class Fair_Value(models.Model):
                 else:
                     retained_earning = "Consistent"
             except:
-                retained_earning = "No data to compare"
+                retained_earning = "Waiting 3rd year statement"
 
         #Rental Income
         if age < 3:
@@ -312,7 +312,7 @@ class Fair_Value(models.Model):
                 else:
                     rental_income = "Consistent"
             except:
-                rental_income = "No data to compare"
+                rental_income = "Waiting 3rd year statement"
 
         #update status field
         self.yield_status = stability_status
