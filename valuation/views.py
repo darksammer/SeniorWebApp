@@ -14,7 +14,54 @@ def index_view(request):
                                             order by period_id desc, div_yield desc\
                                             limit 5')
 
-    return render(request,'valuation/Home.html', {'fund_list':fund_list})
+    best_fund = Fair_Value.objects.raw('select *\
+                                        from valuation_fair_value\
+                                        where short_name_id = (select short_name_id\
+                                                                from valuation_dividend_yield\
+                                                                order by period_id desc, div_yield desc\
+                                                                limit 1)')
+    
+    #chart parameter
+    data = \
+        DataPool(series=
+            [{'options': {
+                'source': best_fund},
+                'terms': [
+                    'period','price','fair','short_name']}
+            ])
+
+    index_chart = Chart(
+            datasource = data,
+            series_options = 
+            [{'options':{
+                    'type': 'area',
+                    'stacking': False,
+                    'fillOpacity': 0.1,
+                    'color': '#5b9aff',
+                    },
+                'terms':{
+                    'period':['price'],
+                    }},
+            {'options':{
+                    'type': 'line',
+                    'stacking' : False,
+                    'dashStyle' : 'longdash',
+                    'color': '#000000'},
+                'terms':{
+                    'period':['fair']
+            }}],
+            chart_options =
+            {'title': {
+                'text': 'Fair Price'},
+                'xAxis': {
+                    'type': 'datetime',
+                    'title': {'text': 'time'}},
+                'yAxis':{
+                    'title': {'text': 'Price'}},
+                
+            })
+
+    return render(request,'valuation/Home.html', {'fund_list':fund_list , 'index_chart':index_chart})
 
 def search_view(request):
     search_string = request.GET.get('q')
