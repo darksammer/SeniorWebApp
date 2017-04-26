@@ -10,9 +10,6 @@
         <script type="text/javascript" src="{% static "js/highcharts.js" %}"></script>
         <!-- Bootstrap js -->
         <script type="text/javascript" src="{% static "js/bootstrap.min.js" %}"></script>
-
-        {% load chartit %}
-        {{ chart|load_charts:"index_chart" }}
     </head>
 
     <body>
@@ -61,7 +58,7 @@
                 <br></br>
                 <div class="col-md-offset-1 col-md-5">
                     <!-- index chart -->
-                    <div id="index_chart">
+                    <!--<div id="index_chart">-->
                     </div>
                     
                 </div>
@@ -74,6 +71,7 @@
                     <tr>
                         <th>อันดับ</th>
                         <th>กองทุน</th>
+                        <th>รอบจ่ายปันผลล่าสุด</th>
                         <th>อัตราปันผล</th>
                     </tr>
 
@@ -81,6 +79,7 @@
                     <tr>
                         <td>{{ forloop.counter }}</td>
                         <td><a href="{% url "fund" name=each.short_name %}"> {{ each.short_name | upper }}</a></td>
+                        <td>{{ each.period }}</td>
                         <td>{{ each.div_yield }}%</td>
                     </tr>
                     {% endfor %}
