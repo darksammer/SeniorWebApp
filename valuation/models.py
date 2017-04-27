@@ -2,7 +2,7 @@ from django.db import models
 from django.db.models import F, Prefetch, Max
 from django.http import Http404
 from decimal import Decimal
-from datetime import datetime
+import datetime
 from django.utils import timezone
 import decimal
 
@@ -204,23 +204,24 @@ class Fair_Value(models.Model):
 
         #detect payout consistent
         try:
-            historical_yield = Dividend_Yield.objects.prefetch_related(
-                                        Prefetch(
-                                            "period",
-                                            queryset = Period_Table.objects.filter(period__year = current_year-1)
-                                        )
-                                    ).filter(short_name = self.short_name)
-            dividend_status =  len(historical_yield) / fund_data.dividend_payout_amount_per_year
-        except:
-            raise ValueError('Fund name error')
+            # begin_date = datetime.date(timezone.now().year-5, 1, 1)
+            # end_date = datetime.date(timezone.now().year-5, 12, 1)
+            begin_date = datetime.date(2011, 1, 1)
+            end_date = datetime.date(2011, 12, 1)
 
-        if dividend_status == 1:
-            payout_consistent = 'Consistent'
-        elif dividend_status > 1:
-            payout_consistent = 'More than usual'
-        else:
-            payout_consistent = 'Zero payout detected in last year'
-            negative_counter += 1
+            historical_yield = Dividend_Yield.objects.filter(short_name = self.short_name, period__period__range = (begin_date, end_date))
+            dividend_status =  len(historical_yield) / fund_data.dividend_payout_amount_per_year
+            if age < 2:
+                payout_consistent = 'No data to compare'
+            elif dividend_status == 1:
+                payout_consistent = 'Consistent'
+            elif dividend_status > 1:
+                payout_consistent = 'More than usual'
+            else:
+                payout_consistent = 'Zero payout detected in last year'
+                negative_counter += 1
+        except:
+            raise ValueError('error')
 
         #get statement for retained and rental
         try:

@@ -5,6 +5,7 @@ from chartit import DataPool, Chart
 from .models import *
 from django.utils import timezone
 import decimal
+import datetime
 
 # Create your views here.
 def index_view(request):
@@ -135,5 +136,7 @@ def ranking_view(request,rank_type):
         return render(request, 'valuation/ranking.html' , {'fund_list':fund_list, 'rank_type':rank_type})
 
 def test_page(request):
-    chart_data = Fair_Value.objects.filter(short_name = 'test').select_related().order_by('-period')
+    begin_date = datetime.date(timezone.now().year-3,1,1)
+    end_date = datetime.date(timezone.now().year-3,12,1)
+    chart_data = Fair_Value.objects.filter(period__period__range = (begin_date,end_date))
     return render(request, 'valuation/test_page.html' , {'chart_data':chart_data})
