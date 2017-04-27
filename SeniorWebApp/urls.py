@@ -26,6 +26,6 @@ urlpatterns = [
     url(r'^index/',views.index_view, name='index'),
     url(r'^search/',views.search_view, name='search'),
     url(r'^ranking/(?P<rank_type>\w+)/',views.ranking_view, name='ranking'),
-    url(r'^fund/(?P<name>\w+)/$',views.fund_view, name='fund'),
+    url(r'^fund/(?P<name>[-\w]+)/$',views.fund_view, name='fund'),
     url(r'^test_page/',views.test_page, name='test'),
 ]

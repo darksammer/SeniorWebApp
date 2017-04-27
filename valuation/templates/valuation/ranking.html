@@ -58,12 +58,10 @@
                     <thead>
                         <tr>
                             <th>อันดับ</th>
-                            <th>ชื่อย่อ</th>
-                            <th>ชื่อกอง</th>
+                            <th>กองทุน</th>
+                            <th>รอบจ่ายปันผลล่าสุด</th>
                             {% if rank_type == 'yield' %}
                                 <th>เงินปันผลตอบแทน</th>
-                            {% elif rank_type == 'fair' %}
-                                <th>ส่วนต่างราคากับมูลค่าแท้จริง</th>
                             {% endif %}
                         </tr>
                     </thead>
@@ -72,7 +70,7 @@
                         <tr>
                             <td>{{ forloop.counter }}</td>
                             <td><a href="{% url "fund" name=each.short_name %}"> {{ each.short_name | upper }}</a></td>
-                            <td>{{ each.full_name }}</td>
+                            <td>{{ each.period }}</td>
                             <td>{{ each.div_yield }}%</td>
                         </tr>
                     {% endfor %}

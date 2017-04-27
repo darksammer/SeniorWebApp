@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models import F, Prefetch, Max
 from django.http import Http404
 from decimal import Decimal
+import datetime
 from django.utils import timezone
 import decimal
 
@@ -203,23 +204,24 @@ class Fair_Value(models.Model):
 
         #detect payout consistent
         try:
-            historical_yield = Dividend_Yield.objects.prefetch_related(
-                                        Prefetch(
-                                            "period",
-                                            queryset = Period_Table.objects.filter(period__year = current_year-1)
-                                        )
-                                    ).filter(short_name = self.short_name)
-            dividend_status =  len(historical_yield) / fund_data.dividend_payout_amount_per_year
-        except:
-            raise ValueError('Fund name error')
+            # begin_date = datetime.date(timezone.now().year-5, 1, 1)
+            # end_date = datetime.date(timezone.now().year-5, 12, 1)
+            begin_date = datetime.date(2011, 1, 1)
+            end_date = datetime.date(2011, 12, 1)
 
-        if dividend_status == 1:
-            payout_consistent = 'Consistent'
-        elif dividend_status > 1:
-            payout_consistent = 'More than usual'
-        else:
-            payout_consistent = 'Zero payout detected in last year'
-            negative_counter += 1
+            historical_yield = Dividend_Yield.objects.filter(short_name = self.short_name, period__period__range = (begin_date, end_date))
+            dividend_status =  len(historical_yield) / fund_data.dividend_payout_amount_per_year
+            if age < 2:
+                payout_consistent = 'No data to compare'
+            elif dividend_status == 1:
+                payout_consistent = 'Consistent'
+            elif dividend_status > 1:
+                payout_consistent = 'More than usual'
+            else:
+                payout_consistent = 'Zero payout detected in last year'
+                negative_counter += 1
+        except:
+            raise ValueError('error')
 
         #get statement for retained and rental
         try:
@@ -321,13 +323,13 @@ class Fair_Value(models.Model):
         self.retained_status = retained_earning
 
         #Fair calculation
-        current_payout = Dividend_Payout.objects.filter(short_name=self.short_name, period=self.period)
+        current_payout = Dividend_Payout.objects.filter(short_name=self.short_name, period=self.period).order_by('-period')
         payout_amount = General_Information.objects.filter(short_name=self.short_name)
         discount_rate = 0.07
         negative_adj_rate = 0.05
-            # fair = payout * payout amount / discount rate
+        # fair = payout * payout amount / discount rate
         for each in current_payout:
-            for each2 in payout_amount:
+            for each2 in payout_amount: 
                 first_stage_fair = each.div_per_share * each2.dividend_payout_amount_per_year / decimal.Decimal(discount_rate)
                 final_fair = first_stage_fair - (negative_counter * (first_stage_fair * decimal.Decimal(negative_adj_rate))) 
                 self.ddm_fair = first_stage_fair
