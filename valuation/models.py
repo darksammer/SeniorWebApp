@@ -189,7 +189,7 @@ class Fair_Value(models.Model):
         negative_counter = 0
 
         try:
-            #get dividend stability
+        #get dividend stability
             stability1 = Dividend_Yield.objects.get_stability1(fund_name = self.short_name)
             stability2 = Dividend_Yield.objects.get_stability2(fund_name = self.short_name)
             if (stability1 >= -1 and stability1 <= 2) and (stability2 >= -1 and stability2 <= 2):

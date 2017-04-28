@@ -8,7 +8,7 @@ class GeneralAdmin(admin.ModelAdmin):
 
 #Admin class for Dividend_Yield
 class YieldAdmin(admin.ModelAdmin):
-    search_fields = ['short_name']
+    search_fields = ['short_name__short_name']
     list_display = ('short_name', 'period', 'div_yield')
 
 class FairInLine(admin.TabularInline):
@@ -16,23 +16,23 @@ class FairInLine(admin.TabularInline):
 
 #Admin class for Dividend_Payout
 class PayoutAdmin(admin.ModelAdmin):
-    search_fields = ['short_name']
+    search_fields = ['short_name__short_name']
     list_display = ('short_name', 'period', 'div_per_share')
     #inlines = [FairInLine]
 
 #Admin class for Financial_Statement
 class StatementAdmin(admin.ModelAdmin):
-    search_fields = ['short_name']
+    search_fields = ['short_name__short_name']
     list_display = ('short_name', 'period', 'net_asset', 'net_profit', 'rental_income', 'retained_earning')
 
 #Admin class for Financial_Ratio
 class RatioAdmin(admin.ModelAdmin):
-    search_fields = ['short_name']
+    search_fields = ['short_name__short_name']
     list_display = ('short_name', 'period', 'eps', 'pbv', 'bvps')
 
 #Admin class for Fair_Value
 class FairAdmin(admin.ModelAdmin):
-    search_fields = ['short_name']
+    search_fields = ['short_name__short_name']
     list_display = ('short_name', 'period', 'price', 'ddm_fair', 'fair', 'yield_status', 'payout_status', 'rental_status', 'retained_status')
     #readonly_fields = ('fair',)
 
