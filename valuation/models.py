@@ -31,10 +31,10 @@ Quarter_Choice = (
 
 #for historical data dump only
 #if data is 2013 latest will be 2012 and former wil be 2011
-latest_begin_date = datetime.date(2012,1,1)
-latest_end_date = datetime.date(2012,12,1)
-former_begin_date = datetime.date(2011,1,1)
-former_end_date = datetime.date(2011,1,1)
+latest_begin_date = datetime.date(2015,1,1)
+latest_end_date = datetime.date(2015,12,1)
+former_begin_date = datetime.date(2014,1,1)
+former_end_date = datetime.date(2014,12,1)
 
 # Create your models here.
 class General_Information(models.Model):
