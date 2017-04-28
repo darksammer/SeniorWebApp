@@ -136,10 +136,13 @@ def ranking_view(request,rank_type):
         return render(request, 'valuation/ranking.html' , {'fund_list':fund_list, 'rank_type':rank_type})
 
 def test_page(request):
-    former_begin_date = datetime.date(2014,1,1)
-    former_end_date = datetime.date(2014,12,1)
-    latest_begin_date = datetime.date(2015,1,1)
-    latest_end_date = datetime.date(2015,12,1)
-    former_year_yield = Dividend_Yield.objects.filter(short_name = 'FUTUREPF', period__period__range = (former_begin_date,former_end_date))
-    latest_year_yield = Dividend_Yield.objects.filter(short_name = 'FUTUREPF', period__period__range = (latest_begin_date,latest_end_date))
-    return render(request, 'valuation/test_page.html' , {'former_year_yield':former_year_yield , 'latest_year_yield':latest_year_yield})
+    former_begin_date = datetime.date(2012,1,1)
+    former_end_date = datetime.date(2012,12,1)
+    latest_begin_date = datetime.date(2013,1,1)
+    latest_end_date = datetime.date(2013,12,1)
+
+    fund_data = General_Information.objects.get(short_name = 'QHPF')
+    historical_yield = Dividend_Yield.objects.filter(short_name = 'QHPF', period__period__range = (latest_begin_date, latest_end_date))
+    test = len(historical_yield)
+    status = len(historical_yield) / fund_data.dividend_payout_amount_per_year
+    return render(request, 'valuation/test_page.html' , {'historical_yield':historical_yield, 'test':test, 'fund_data':fund_data, 'status':status})
