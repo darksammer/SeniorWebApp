@@ -1,9 +1,16 @@
-{{chart_data.0.period}}<br>
-{{chart_data.0.short_name}}<br>
-{{chart_data.0.price}}<br>
-{{chart_data.0.ddm_fair}}<br>
-{{chart_data.0.fair}}<br>
-{{chart_data.0.yield_status}}<br>
-{{chart_data.0.payout_status}}<br>
-{{chart_data.0.rental_status}}<br>
-{{chart_data.0.retained_status}}<br>
+{% for each in latest_year_yield %}
+    {{each.short_name}}<br>
+    {{each.period}}<br>
+    {{each.short_name}}<br>
+    {{each.div_yield}}<br>
+    <br>
+{% endfor %}
+<b>-------------------------------</b><br>
+
+{% for each in former_year_yield %}
+    {{each.short_name}}<br>
+    {{each.period}}<br>
+    {{each.short_name}}<br>
+    {{each.div_yield}}<br>
+    <br>
+{% endfor %}

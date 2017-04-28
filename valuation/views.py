@@ -136,7 +136,11 @@ def ranking_view(request,rank_type):
         return render(request, 'valuation/ranking.html' , {'fund_list':fund_list, 'rank_type':rank_type})
 
 def test_page(request):
-    begin_date = datetime.date(timezone.now().year-3,1,1)
-    end_date = datetime.date(timezone.now().year-3,12,1)
-    chart_data = Fair_Value.objects.filter(period__period__range = (begin_date,end_date))
-    return render(request, 'valuation/test_page.html' , {'chart_data':chart_data})
+    latest_begin_date = datetime.date(timezone.now().year-1, 1, 1)
+    latest_end_date = datetime.date(timezone.now().year-1, 12, 1)
+    former_begin_date = datetime.date(timezone.now().year-2, 1, 1)
+    former_end_date = datetime.date(timezone.now().year-2, 12, 1)
+
+    latest_year_yield = Dividend_Yield.objects.filter(short_name = 'GOLDPF', period__period__range = (latest_begin_date,latest_end_date))
+    former_year_yield = Dividend_Yield.objects.filter(short_name = 'GOLDPF', period__period__range = (former_begin_date,former_end_date))
+    return render(request, 'valuation/test_page.html' , {'latest_year_yield':latest_year_yield, 'former_year_yield':former_year_yield})

@@ -29,6 +29,13 @@ Quarter_Choice = (
     ('Q4','Q4')
 )
 
+#for historical data dump only
+#if data is 2013 latest will be 2012 and former wil be 2011
+latest_begin_date = datetime.date(2012,1,1)
+latest_end_date = datetime.date(2012,12,1)
+former_begin_date = datetime.date(2011,1,1)
+former_end_date = datetime.date(2011,1,1)
+
 # Create your models here.
 class General_Information(models.Model):
     short_name = models.CharField(primary_key=True, max_length=10)
@@ -89,8 +96,13 @@ class YieldManager(models.Manager):
     #stability2
     def get_stability2(self,fund_name):
         try:
-            latest_year_yield = Dividend_Yield.objects.filter(short_name = fund_name).order_by('-period')[:4]
-            former_year_yield = Dividend_Yield.objects.filter(short_name = fund_name).order_by('-period')[4:][:4]
+            # latest_begin_date = datetime.date(timezone.now().year-2, 1, 1)
+            # latest_end_date = datetime.date(timezone.now().year-2, 12, 1)
+            # former_begin_date = datetime.date(timezone.now().year-3, 1, 1)
+            # former_end_date = datetime.date(timezone.now().year-3, 12, 1)
+
+            latest_year_yield = Dividend_Yield.objects.filter(short_name = fund_name, period__period__range = (latest_begin_date,latest_end_date))
+            former_year_yield = Dividend_Yield.objects.filter(short_name = fund_name, period__period__range = (former_begin_date,former_end_date))
 
             #avg latest_year
             counter = 0
@@ -204,12 +216,10 @@ class Fair_Value(models.Model):
 
         #detect payout consistent
         try:
-            # begin_date = datetime.date(timezone.now().year-5, 1, 1)
-            # end_date = datetime.date(timezone.now().year-5, 12, 1)
-            begin_date = datetime.date(2011, 1, 1)
-            end_date = datetime.date(2011, 12, 1)
+            # begin_date = datetime.date(timezone.now().year-2, 1, 1)
+            # end_date = datetime.date(timezone.now().year-2, 12, 1)
 
-            historical_yield = Dividend_Yield.objects.filter(short_name = self.short_name, period__period__range = (begin_date, end_date))
+            historical_yield = Dividend_Yield.objects.filter(short_name = self.short_name, period__period__range = (latest_begin_date, latest_end_date))
             dividend_status =  len(historical_yield) / fund_data.dividend_payout_amount_per_year
             if age < 2:
                 payout_consistent = 'No data to compare'
