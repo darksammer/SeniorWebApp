@@ -136,6 +136,7 @@ def ranking_view(request,rank_type):
         return render(request, 'valuation/ranking.html' , {'fund_list':fund_list, 'rank_type':rank_type})
 
 def test_page(request):
+<<<<<<< HEAD
     former_begin_date = datetime.date(2012,1,1)
     former_end_date = datetime.date(2012,12,1)
     latest_begin_date = datetime.date(2013,1,1)
@@ -146,3 +147,13 @@ def test_page(request):
     test = len(historical_yield)
     status = len(historical_yield) / fund_data.dividend_payout_amount_per_year
     return render(request, 'valuation/test_page.html' , {'historical_yield':historical_yield, 'test':test, 'fund_data':fund_data, 'status':status})
+=======
+    latest_begin_date = datetime.date(timezone.now().year-1, 1, 1)
+    latest_end_date = datetime.date(timezone.now().year-1, 12, 1)
+    former_begin_date = datetime.date(timezone.now().year-2, 1, 1)
+    former_end_date = datetime.date(timezone.now().year-2, 12, 1)
+
+    latest_year_yield = Dividend_Yield.objects.filter(short_name = 'GOLDPF', period__period__range = (latest_begin_date,latest_end_date))
+    former_year_yield = Dividend_Yield.objects.filter(short_name = 'GOLDPF', period__period__range = (former_begin_date,former_end_date))
+    return render(request, 'valuation/test_page.html' , {'latest_year_yield':latest_year_yield, 'former_year_yield':former_year_yield})
+>>>>>>> ba7f4c82096f24d54b9ff3e8b836086448b42d4c

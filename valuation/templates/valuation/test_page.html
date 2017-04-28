@@ -1,5 +1,24 @@
+<<<<<<< HEAD
 {{historical_yield}}<br>
 {{test}}<br>
 {{fund_data.dividend_payout_amount_per_year}}<br>
 {{status}}<br>
 <b>-------------------------------</b><br>
+=======
+{% for each in latest_year_yield %}
+    {{each.short_name}}<br>
+    {{each.period}}<br>
+    {{each.short_name}}<br>
+    {{each.div_yield}}<br>
+    <br>
+{% endfor %}
+<b>-------------------------------</b><br>
+
+{% for each in former_year_yield %}
+    {{each.short_name}}<br>
+    {{each.period}}<br>
+    {{each.short_name}}<br>
+    {{each.div_yield}}<br>
+    <br>
+{% endfor %}
+>>>>>>> ba7f4c82096f24d54b9ff3e8b836086448b42d4c
