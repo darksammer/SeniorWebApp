@@ -357,3 +357,4 @@ class FeedNews(models.Model):
     date = models.DateField(auto_now=False, auto_now_add=False)
     title = models.CharField(max_length=200)
     link = models.CharField(max_length=200)
+    description = models.CharField(max_length=400, null=True)
