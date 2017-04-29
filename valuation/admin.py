@@ -36,6 +36,11 @@ class FairAdmin(admin.ModelAdmin):
     list_display = ('short_name', 'period', 'price', 'ddm_fair', 'fair', 'yield_status', 'payout_status', 'rental_status', 'retained_status')
     #readonly_fields = ('fair',)
 
+#Admin class for FeedNews
+class NewsAdmin(admin.ModelAdmin):
+    search_fields = ['short_name__short_name']
+    list_display = ('short_name', 'date', 'title')
+
 # Register your models here.
 admin.site.register(General_Information, GeneralAdmin)
 admin.site.register(Dividend_Yield, YieldAdmin)
@@ -44,3 +49,4 @@ admin.site.register(Financial_Statement, StatementAdmin)
 admin.site.register(Financial_Ratio, RatioAdmin)
 admin.site.register(Fair_Value, FairAdmin)
 admin.site.register(Period_Table)
+admin.site.register(FeedNews, NewsAdmin)
