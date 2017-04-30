@@ -99,3 +99,8 @@ def test_page(request):
     test = len(historical_yield)
     status = len(historical_yield) / fund_data.dividend_payout_amount_per_year
     return render(request, 'valuation/test_page.html' , {'historical_yield':historical_yield, 'test':test, 'fund_data':fund_data, 'status':status})
+
+def news_view(request):
+    #ranking by latest_yield
+        news_list = FeedNews.objects.all().order_by('-date')
+        return render(request, 'valuation/feednews.html' , {'news_list':news_list})
