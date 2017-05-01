@@ -8,5 +8,5 @@ urlpattern = [
     url(r'^$',views.search_view,name='search'),
     url(r'^$',views.ranking_view,name='ranking'),
     url(r'^$',views.test_page,name='test'),
-    url(r'^$',views.news_view,name='feednews')
+    url(r'^$',views.news_view,name='news')
 ]
