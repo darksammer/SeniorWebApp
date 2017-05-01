@@ -17,7 +17,7 @@
 
     <body>
         <!-- header -->
-        <nav class="navbar navbar-default">
+       <nav class="navbar navbar-default">
             <div class="container-fluid">
                 <div class="col-md-offset-2">
                     <div class="navbar-header">
@@ -26,8 +26,14 @@
                     </div>  
                 </div>
 
+                <ul class="nav navbar-nav">
+                    <li><a href="{% url "index" %}">หน้าแรก</a></li>
+                    <li><a href="{% url "ranking" rank_type="yield" %}">อันดับกองทุน</a></li>
+                    <li><a href="{% url "news" %}">ข่าวสาร</a></li>
+                </ul>
+
                 <!-- Header Search -->
-                <div class="col-sm-3 col-md-3 col-md-offset-4">
+                <div class="col-sm-3 col-md-3 col-md-offset-2">
                     <form class="navbar-form" role="search" action="{% url "search" %}">
                         <div class="input-group">
                             <input type="text" class="form-control" placeholder="Search" name="q">
@@ -37,23 +43,8 @@
                         </div>
                     </form>
                 </div>
-
             </div>
         </nav>
-
-        <!-- Menu under header -->
-        <div class="container-fluid">
-            <div class="col-md-offset-3">
-                <ul class="nav navbar-nav page-header">
-                    <li><a href="{% url "index" %}">หน้าแรก</a></li>
-                    <li><a href="a">ราคาซื้อขาย</a></li>
-                    <li><a href="{% url "ranking" rank_type="yield" %}">อันดับกองทุน</a></li>
-                    <li><a href="{% url "news" %}">ข่าวสาร</a></li>
-                    <li><a href="#">ส่วนให้ความรู้</a></li>
-                    <li><a href="#">บทความการลงทุน</a></li>
-                </ul>
-            </div>
-        </div>
 
         <!-- Content -->
         <div class="container">
