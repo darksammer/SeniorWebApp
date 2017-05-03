@@ -57,7 +57,17 @@
 
             <div class="row">
                 <!-- Table -->
-                <div class="col-md-offset-2 col-md-4">
+                <div class="col-md-offset-2 col-md-3">
+                    
+                    <h3>ข่าวสารล่าสุด</h3>
+                    {% for each in homenews_list %}
+                            <i class="glyphicon glyphicon-play"></i><a href={{each.link}}>[{{ each.short_name_id}}]  {{ each.title }}</a><br></br>
+                            
+                    {% endfor %}
+                    <p class="text-right"><a href="{% url "news" %}" > <mark>ReadMore</mark></a> </p>
+                    </div>
+                <div class=" col-md-3">
+                <h3>Top 5 อันดับกองทุน</h3>
                 <table class="table table-striped">
                     <tr>
                         <th>อันดับ</th>

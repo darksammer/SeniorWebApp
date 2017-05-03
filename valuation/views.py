@@ -14,8 +14,11 @@ def index_view(request):
                                             group by short_name_id\
                                             order by period_id desc, div_yield desc\
                                             limit 5')
-
-    return render(request,'valuation/Home.html', {'fund_list':fund_list})
+    homenews_list = FeedNews.objects.raw('select id,short_name_id,title,link\
+                                            from valuation_feednews\
+                                            order by date desc\
+                                            limit 5')
+    return render(request,'valuation/Home.html', {'fund_list':fund_list,'homenews_list':homenews_list})
 
 def search_view(request):
     search_string = request.GET.get('q')

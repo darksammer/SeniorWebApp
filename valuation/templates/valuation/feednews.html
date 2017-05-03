@@ -75,7 +75,7 @@
                                 
                                 <td>{{ each.date }}</td>
                                 <td><a href="{% url "fund" name=each.short_name %}"> {{ each.short_name | upper }}</a></td>
-                                <td><a href={{each.link}}>{{ each.title }}%</td>
+                                <td><a href={{each.link}}>{{ each.title }}</a></td>
                             </tr>
                         {% endfor %}
                         </table>
