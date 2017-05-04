@@ -12,6 +12,8 @@
         <script type="text/javascript" src="{% static "js/highcharts.js" %}"></script>
         <!-- Bootstrap js -->
         <script type="text/javascript" src="{% static "js/bootstrap.min.js" %}"></script>
+        <!-- sticky footer -->
+        <link href = "{% static "css/sticky-footer-navbar.css" %}" rel = "stylesheet">
     </head>
 
     <body>
@@ -64,7 +66,8 @@
                             <i class="glyphicon glyphicon-play"></i><a href={{each.link}}>[{{ each.short_name_id}}]  {{ each.title }}</a><br></br>
                             
                     {% endfor %}
-                    <p class="text-right"><a href="{% url "news" %}" > <mark>ReadMore</mark></a> </p>
+                    <p class="text-right"><a href="{% url "news" %}" > <button type="button" class="btn btn-default btn-xs" style="color:#0281B8;">ReadMore</button></a> </p>
+                    
                     </div>
                 <div class=" col-md-3">
                 <h3>Top 5 อันดับกองทุน</h3>
@@ -89,7 +92,11 @@
             </div>
 
         </div>
-        
+        <footer class="footer">
+            <div class="container">
+                <p class="text-muted">Place sticky footer content here.</p>
+            </div>
+        </footer>
             
         <!-- script for menu dropdown -->
         <script>

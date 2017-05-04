@@ -10,6 +10,8 @@
         <script type="text/javascript" src="{% static "js/jquery-3.1.1.min.js" %}"></script>
         <!-- Bootstrap js -->
         <script type="text/javascript" src="{% static "js/bootstrap.min.js" %}"></script>
+        <!-- sticky footer -->
+        <link href = "{% static "css/sticky-footer-navbar.css" %}" rel = "stylesheet">
     </head>
 
     <body>
@@ -71,6 +73,11 @@
             </div>
         </div>
         </div>
+        <footer class="footer">
+            <div class="container">
+                <p class="text-muted">Place sticky footer content here.</p>
+            </div>
+        </footer>
         <!-- script for menu dropdown -->
         <script>
             $(document).ready(function(){

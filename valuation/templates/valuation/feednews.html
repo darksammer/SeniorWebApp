@@ -12,6 +12,8 @@
         <script type="text/javascript" src="{% static "js/highcharts.js" %}"></script>
         <!-- Bootstrap js -->
         <script type="text/javascript" src="{% static "js/bootstrap.min.js" %}"></script>
+        <!-- sticky footer -->
+        <link href = "{% static "css/sticky-footer-navbar.css" %}" rel = "stylesheet">
     </head>
 
     <body>
@@ -48,7 +50,7 @@
         <!-- Content -->
         <div class="container">
             <div class="row">
-                <br></br>
+                
                 <div class="col-md-offset-1 col-md-5">
                     </div>
                     
@@ -84,7 +86,11 @@
                 </div>
             </div>
         </div>
-        
+        <footer class="footer">
+            <div class="container">
+                <p class="text-muted">Place sticky footer content here.</p>
+            </div>
+        </footer>
             
         <!-- script for menu dropdown -->
         <script>
