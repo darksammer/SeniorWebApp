@@ -1,1 +1,5 @@
 body { padding-top: 70px; }
+
+.color_test {
+    background-color: #f00;
+}
