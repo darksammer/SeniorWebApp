@@ -12,6 +12,14 @@
         <script type="text/javascript" src="{% static "js/bootstrap.min.js" %}"></script>
         <!-- sticky footer -->
         <link href = "{% static "css/sticky-footer-navbar.css" %}" rel = "stylesheet">
+        <style>
+        img {
+            width: 5%;
+            height: auto;
+        }
+        .classA { color: black; }
+        
+        </style>
     </head>
 
     <body>
@@ -75,7 +83,19 @@
         </div>
         <footer class="footer">
             <div class="container">
-                <p class="text-muted">Place sticky footer content here.</p>
+                <div class="col-md-6 col-xs-5">
+                    <p class="text-muted">© 2016 - All Rights with PFCore</p>
+                    
+                </div>
+                <div class="col-md-5 col-xs-offset-1  col-xs-5 color">
+                    <img class="text-muted" src="{% static "icons/fblogo.png" %}">
+                    
+                        <a class="classA" href="http://pfcoreseniorproject.azurewebsites.net/index/">PFcore.com</a>&nbsp;/
+                        <a class="classA" href="#">About us</a>&nbsp;/
+                        <a class="classA" href="#">Blog</a>&nbsp;/
+                        <a class="classA" href="#">Contact us</a>
+                    
+                </div>
             </div>
         </footer>
         <!-- script for menu dropdown -->
