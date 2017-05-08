@@ -155,6 +155,31 @@
                     </tbody>
                 </table>
             </div>
+            <div class="col-md-8 col-md-offset-1">
+                <font size="4">ข่าวสารกองทุน</font><br>
+                <table class="table table-hover">
+                    <tbody>
+                        <thead>
+                            <tr>
+                                <th style="width:15%">วันที่</th>
+                                
+                                <th>หัวข่อ</th>
+                                
+                            </tr>
+                        </thead>
+                        <!-- rank -->
+                        {% for each in news_data %}
+                            <tr>
+                                
+                                <td>{{ each.date }}</td>
+                                <td><a href={{each.link}}>{{ each.title }}</a></td>
+                            </tr>
+                        {% endfor %}
+                        </table>
+                        
+                    </tbody>
+                </table>
+            </div>            
         </div>
         <footer class="footer">
             <div class="container">

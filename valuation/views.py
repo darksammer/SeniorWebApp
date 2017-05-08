@@ -32,9 +32,10 @@ def fund_view(request,name):
     try:
         fund_data = General_Information.objects.get(short_name = name)
         chart_data = Fair_Value.objects.filter(short_name = name).select_related().order_by('-period')
+        
     except:
         raise Http404('Fund not found')
-
+    news_data = FeedNews.objects.filter(short_name = name)  
     #fund age
     age = timezone.now().year - fund_data.ipo_date
 
@@ -80,7 +81,7 @@ def fund_view(request,name):
 
     
     return render(request,'valuation/fund.html',{'name': name, 'age':age, 'fund_data':fund_data,
-                                                    'chart':value_chart, 'chart_data':chart_data, 'age':age})
+                                                    'chart':value_chart, 'chart_data':chart_data, 'age':age,'news_data':news_data})
 
 def ranking_view(request,rank_type):
     #ranking by latest_yield
