@@ -1,5 +1,27 @@
-body { padding-top: 70px; }
+body { 
+    padding-top: 70px; 
+}
 
-.color_test {
-    background-color: #f00;
+.color_text {
+    
+    color: black; 
+}
+
+img {
+            width: 5%;
+            height: auto;
+}
+.section {
+    height: 50vh;
+    overflow: hidden;
+    position: relative;
+}
+
+
+.bg-gradient-blue {
+    background: #47c6f1;
+    background: -moz-linear-gradient(left,#47c6f1 0,#79e2fe 100%);
+    background: -webkit-linear-gradient(left,#47c6f1 0,#79e2fe 100%);
+    background: linear-gradient(to right,#47c6f1 0,#79e2fe 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='$color-blue',endColorstr='$color-blur-end-gradient',GradientType=1);
 }

@@ -14,21 +14,14 @@
         <script type="text/javascript" src="{% static "js/bootstrap.min.js" %}"></script>
         <!-- sticky footer -->
         <link href = "{% static "css/sticky-footer-navbar.css" %}" rel = "stylesheet">
-        <style>
-        img {
-            width: 5%;
-            height: auto;
-        }
-        .classA { color: black; }
         
-        </style>
     </head>
 
     <body>
         <!-- header -->
         <nav class="navbar navbar-default navbar-fixed-top">
             <div class="container-fluid">
-                <div class="col-md-offset-2">
+                <div class="col-md-offset-3">
                     <div class="navbar-header">
                         <!-- header logo -->
                         <a class="navbar-brand" href="{% url "index" %}">PFCore</a>              
@@ -42,7 +35,7 @@
                 </ul>
 
                 <!-- Header Search -->
-                <div class="col-sm-3 col-md-3 col-md-offset-2">
+                <div class="col-sm-3 col-md-3 col-md-offset-1 col-lg-offset-2">
                     <form class="navbar-form" role="search" action="{% url "search" %}">
                         <div class="input-group">
                             <input type="text" class="form-control" placeholder="Search" name="q">
@@ -64,41 +57,13 @@
                     
                 </div>
             </div>
-
-            <div class="row">
-                <!-- Table -->
-                <div class="col-md-offset-2 col-md-3">
-                    
-                    <h3>ข่าวสารล่าสุด</h3>
-                    {% for each in homenews_list %}
-                            <i class="glyphicon glyphicon-play"></i><a href={{each.link}}>[{{ each.short_name_id}}]  {{ each.title }}</a><br></br>
-                            
-                    {% endfor %}
-                    <p class="text-right"><a href="{% url "news" %}" > <button type="button" class="btn btn-default btn-xs" style="color:#0281B8;">ReadMore</button></a> </p>
-                    
+            <div class="col-md-offset-2 col-md-8">
+                <div class = "section section-potential-investment bg-gradient-blue">
+                    <div class="content-wrapper">
+                        
                     </div>
-                <div class=" col-md-3">
-                <h3>Top 5 อันดับกองทุน</h3>
-                <table class="table table-striped">
-                    <tr>
-                        <th>อันดับ</th>
-                        <th>กองทุน</th>
-                        <th>รอบจ่ายปันผลล่าสุด</th>
-                        <th>อัตราปันผล</th>
-                    </tr>
-
-                    {% for each in fund_list %}
-                    <tr>
-                        <td>{{ forloop.counter }}</td>
-                        <td><a href="{% url "fund" name=each.short_name %}"> {{ each.short_name | upper }}</a></td>
-                        <td>{{ each.period }}</td>
-                        <td>{{ each.div_yield }}%</td>
-                    </tr>
-                    {% endfor %}
-                </table>
                 </div>
             </div>
-
         </div>
         <footer class="footer">
             <div class="container">
@@ -109,10 +74,10 @@
                 <div class="col-md-5 col-xs-offset-1  col-xs-5 color">
                     <img class="text-muted" src="{% static "icons/fblogo.png" %}">
                     
-                        <a class="classA" href="http://pfcoreseniorproject.azurewebsites.net/index/">PFcore.com</a>&nbsp;/
-                        <a class="classA" href="#">About us</a>&nbsp;/
-                        <a class="classA" href="#">Blog</a>&nbsp;/
-                        <a class="classA" href="#">Contact us</a>
+                        <a class="color_text" href="http://pfcoreseniorproject.azurewebsites.net/index/">PFcore.com</a>&nbsp;/
+                        <a class="color_text" href="#">About us</a>&nbsp;/
+                        <a class="color_text" href="#">Blog</a>&nbsp;/
+                        <a class="color_text" href="#">Contact us</a>
                     
                 </div>
             </div>
