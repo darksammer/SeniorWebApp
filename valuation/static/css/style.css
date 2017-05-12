@@ -7,10 +7,7 @@ body {
     color: black; 
 }
 
-img {
-            width: 5%;
-            height: auto;
-}
+
 .section {
     height: 50vh;
     overflow: hidden;
@@ -25,3 +22,6 @@ img {
     background: linear-gradient(to right,#47c6f1 0,#79e2fe 100%);
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='$color-blue',endColorstr='$color-blur-end-gradient',GradientType=1);
 }
+
+
+
